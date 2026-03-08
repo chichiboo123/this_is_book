@@ -54,7 +54,8 @@ export const useAppStore = create<AppState>((set) => ({
   selectedBook: null,
   bookCard: {
     charName: "",
-    charTaste: "",
+    charLikes: "",
+    charDislikes: "",
     charLook: "",
     charPhrase: "",
     charColor: "#A8D8EA",
