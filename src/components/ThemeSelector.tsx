@@ -41,13 +41,14 @@ export default function ThemeSelector() {
     reader.onload = (event) => {
       try {
         const parsed = JSON.parse(event.target?.result as string);
+        const currentState = useAppStore.getState();
         useAppStore.setState({
-          lang: parsed.lang || state.lang,
-          theme: parsed.theme || state.theme,
+          lang: parsed.lang || currentState.lang,
+          theme: parsed.theme || currentState.theme,
           selectedBook: parsed.selectedBook || null,
-          bookCard: parsed.bookCard || state.bookCard,
+          bookCard: parsed.bookCard || currentState.bookCard,
           introText: parsed.introText || "",
-          questions: parsed.questions || state.questions,
+          questions: parsed.questions || currentState.questions,
         });
         if (parsed.theme) {
           document.documentElement.setAttribute("data-theme", parsed.theme);
