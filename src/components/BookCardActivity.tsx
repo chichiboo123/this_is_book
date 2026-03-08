@@ -119,16 +119,27 @@ export default function BookCardActivity() {
       {/* Upload or Draw */}
       <div className="space-y-3">
         <input ref={fileRef} type="file" accept="image/*" onChange={handleUpload} className="hidden" />
-        <button onClick={() => fileRef.current?.click()} className="btn-outline-cute w-full">
-          📷 {t("uploadDrawing", lang)}
-        </button>
-
-        {bookCard.uploadedImageUrl && (
-          <img
-            src={bookCard.uploadedImageUrl}
-            alt="uploaded"
-            className="w-full max-h-48 object-contain rounded-xl border-2 border-primary/20"
-          />
+        
+        {bookCard.uploadedImageUrl ? (
+          <div className="space-y-2 border-2 border-primary/20 rounded-xl p-3 bg-card/50">
+            <img
+              src={bookCard.uploadedImageUrl}
+              alt="uploaded"
+              className="w-full max-h-48 object-contain rounded-lg"
+            />
+            <div className="flex gap-2">
+              <button onClick={() => fileRef.current?.click()} className="btn-outline-cute flex-1 py-1.5 text-xs">
+                📷 {t("removeImage", lang).split('/')[0]} (변경)
+              </button>
+              <button onClick={() => setBookCard({ uploadedImageUrl: null })} className="btn-outline-cute border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground py-1.5 px-3">
+                ❌
+              </button>
+            </div>
+          </div>
+        ) : (
+          <button onClick={() => fileRef.current?.click()} className="btn-outline-cute w-full">
+            📷 {t("uploadDrawing", lang)}
+          </button>
         )}
 
         <DrawingCanvas />

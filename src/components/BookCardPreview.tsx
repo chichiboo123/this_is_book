@@ -33,8 +33,11 @@ export default function BookCardPreview() {
       )}
 
       <div className="space-y-1.5 text-sm">
-        {bookCard.charTaste && (
-          <p><span className="font-bold">🎯 {t("charTaste", lang)}:</span> {bookCard.charTaste}</p>
+        {bookCard.charLikes && (
+          <p><span className="font-bold">👍 {t("charLikes", lang)}:</span> {bookCard.charLikes}</p>
+        )}
+        {bookCard.charDislikes && (
+          <p><span className="font-bold">👎 {t("charDislikes", lang)}:</span> {bookCard.charDislikes}</p>
         )}
         {bookCard.charLook && (
           <p><span className="font-bold">👀 {t("charLook", lang)}:</span> {bookCard.charLook}</p>
