@@ -12,6 +12,10 @@ export default {
         "2xl": "1400px",
       },
     },
+    fontFamily: {
+      body: ['var(--font-body)'],
+      title: ['"Black Han Sans"', 'sans-serif'],
+    },
     extend: {
       colors: {
         border: "hsl(var(--border))",
