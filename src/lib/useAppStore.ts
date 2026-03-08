@@ -16,7 +16,8 @@ export interface BookInfo {
 
 export interface BookCardData {
   charName: string;
-  charTaste: string;
+  charLikes: string;
+  charDislikes: string;
   charLook: string;
   charPhrase: string;
   charColor: string;
@@ -53,7 +54,8 @@ export const useAppStore = create<AppState>((set) => ({
   selectedBook: null,
   bookCard: {
     charName: "",
-    charTaste: "",
+    charLikes: "",
+    charDislikes: "",
     charLook: "",
     charPhrase: "",
     charColor: "#A8D8EA",

@@ -27,7 +27,8 @@ const translations: Record<string, Record<Lang, string>> = {
   introCardTitle: { ko: "📝 소개 카드 만들기", en: "📝 Intro Card", ja: "📝 紹介カード", zh: "📝 介绍卡" },
   questionCardTitle: { ko: "❓ 질문 카드", en: "❓ Question Card", ja: "❓ 質問カード", zh: "❓ 问题卡" },
   charName: { ko: "캐릭터 이름", en: "Character Name", ja: "キャラ名", zh: "角色名" },
-  charTaste: { ko: "취향", en: "Preferences", ja: "好み", zh: "爱好" },
+  charLikes: { ko: "좋아하는 것", en: "Likes", ja: "好きなもの", zh: "喜欢" },
+  charDislikes: { ko: "싫어하는 것", en: "Dislikes", ja: "嫌いなもの", zh: "讨厌" },
   charLook: { ko: "외모", en: "Appearance", ja: "外見", zh: "外貌" },
   charPhrase: { ko: "자주 하는 말", en: "Catchphrase", ja: "口癖", zh: "口头禅" },
   charColor: { ko: "어울리는 색깔", en: "Matching Color", ja: "似合う色", zh: "搭配颜色" },
@@ -72,7 +73,10 @@ const translations: Record<string, Record<Lang, string>> = {
   noResults: { ko: "검색 결과가 없어요 😢", en: "No results found 😢", ja: "検索結果がありません 😢", zh: "没有搜索结果 😢" },
   searching: { ko: "검색 중...", en: "Searching...", ja: "検索中...", zh: "搜索中..." },
   selectBook: { ko: "이 책 선택!", en: "Select this book!", ja: "この本を選ぶ！", zh: "选择这本书！" },
-  clearCanvas: { ko: "지우기", en: "Clear", ja: "消す", zh: "清除" },
+  clearCanvas: { ko: "전체 지우기", en: "Clear All", ja: "すべて消す", zh: "全部清除" },
+  eraser: { ko: "지우개", en: "Eraser", ja: "消しゴム", zh: "橡皮" },
+  pen: { ko: "펜", en: "Pen", ja: "ペン", zh: "笔" },
+  removeImage: { ko: "이미지 변경/제거", en: "Remove/Change Image", ja: "画像を変更・削除", zh: "更改/移除图片" },
   penColor: { ko: "펜 색상", en: "Pen Color", ja: "ペンの色", zh: "笔颜色" },
   penSize: { ko: "펜 크기", en: "Pen Size", ja: "ペンサイズ", zh: "笔大小" },
   copied: { ko: "복사 완료! ✨", en: "Copied! ✨", ja: "コピー完了！✨", zh: "复制成功！✨" },
@@ -82,6 +86,8 @@ const translations: Record<string, Record<Lang, string>> = {
   introCard: { ko: "소개 카드", en: "Intro Card", ja: "紹介カード", zh: "介绍卡" },
   questionCard: { ko: "질문 카드", en: "Question Card", ja: "質問カード", zh: "问题卡" },
   footer: { ko: "created by. 교육뮤지컬 꿈꾸는 치수쌤", en: "created by. 교육뮤지컬 꿈꾸는 치수쌤", ja: "created by. 교육뮤지컬 꿈꾸는 치수쌤", zh: "created by. 교육뮤지컬 꿈꾸는 치수쌤" },
+  downloadJson: { ko: "데이터 저장", en: "Save Data", ja: "データ保存", zh: "保存数据" },
+  uploadJson: { ko: "데이터 복원", en: "Restore Data", ja: "データ復元", zh: "恢复数据" },
 };
 
 export function t(key: string, lang: Lang): string {

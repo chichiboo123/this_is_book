@@ -1,8 +1,9 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { toPng } from "html-to-image";
 import { useAppStore } from "@/lib/useAppStore";
 import { t } from "@/lib/i18n";
 import { toast } from "sonner";
+import { Download, Copy, CheckSquare } from "lucide-react";
 
 interface ExportToolbarProps {
   cardRefs: {
@@ -31,7 +32,6 @@ export default function ExportToolbar({ cardRefs }: ExportToolbarProps) {
   };
 
   const downloadDataUrl = (dataUrl: string, name: string) => {
-    // Convert PNG data URL to webp by drawing to canvas
     const img = new Image();
     img.onload = () => {
       const canvas = document.createElement("canvas");
@@ -87,41 +87,55 @@ export default function ExportToolbar({ cardRefs }: ExportToolbarProps) {
   ];
 
   return (
-    <div className="card-activity space-y-4">
-      <h3 className="section-title text-lg">📤 {t("exportSelected", lang)}</h3>
+    <div className="card-activity space-y-4 border-2 border-primary/20">
+      <h3 className="section-title text-lg mb-2 flex items-center gap-2">
+        <Download size={20} />
+        {t("exportSelected", lang)}
+      </h3>
 
-      {/* Individual export buttons */}
-      <div className="grid gap-3">
+      <div className="grid gap-4 sm:grid-cols-3">
         {cards.map(([key, label, ref]) => (
-          <div key={key} className="flex items-center gap-2 flex-wrap">
-            <input
-              type="checkbox"
-              checked={selected.has(key)}
-              onChange={() => toggle(key)}
-              className="w-4 h-4 accent-[hsl(var(--primary))]"
-            />
-            <span className="text-sm font-bold flex-1">{label}</span>
-            <button
-              onClick={() => handleExportImage(key, ref)}
-              className="btn-cute text-xs py-1.5 px-3"
-            >
-              {t("exportImage", lang)}
-            </button>
-            <button
-              onClick={() => handleCopyClipboard(ref)}
-              className="btn-outline-cute text-xs py-1.5 px-3"
-            >
-              {t("copyClipboard", lang)}
-            </button>
+          <div key={key} className="flex flex-col gap-3 p-4 rounded-xl bg-card border-2 border-primary/10 shadow-sm transition-all hover:border-primary/30">
+            <label className="flex items-center justify-between cursor-pointer group">
+              <span className="text-sm font-bold group-hover:text-primary transition-colors">{label}</span>
+              <input
+                type="checkbox"
+                checked={selected.has(key)}
+                onChange={() => toggle(key)}
+                className="w-5 h-5 accent-[hsl(var(--primary))] cursor-pointer rounded"
+                title={t("selectCards", lang)}
+              />
+            </label>
+            <div className="flex gap-2 mt-auto">
+              <button
+                onClick={() => handleExportImage(key, ref)}
+                className="btn-cute flex-1 text-xs py-2 px-2 flex items-center justify-center gap-1"
+              >
+                <Download size={14} /> {t("exportImage", lang)}
+              </button>
+              <button
+                onClick={() => handleCopyClipboard(ref)}
+                className="btn-outline-cute flex-1 text-xs py-2 px-2 flex items-center justify-center gap-1"
+              >
+                <Copy size={14} /> {t("copyClipboard", lang)}
+              </button>
+            </div>
           </div>
         ))}
       </div>
 
-      {selected.size > 0 && (
-        <button onClick={handleExportSelected} className="btn-cute w-full">
-          {t("exportSelected", lang)} ({selected.size})
-        </button>
-      )}
+      <button
+        onClick={handleExportSelected}
+        disabled={selected.size === 0}
+        className={`w-full py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all ${
+          selected.size > 0 
+            ? "bg-primary text-primary-foreground shadow-md hover:scale-[1.02]" 
+            : "bg-secondary text-muted-foreground opacity-50 cursor-not-allowed"
+        }`}
+      >
+        <CheckSquare size={18} />
+        {t("exportSelected", lang)} {selected.size > 0 ? `(${selected.size})` : ""}
+      </button>
     </div>
   );
 }
