@@ -86,6 +86,8 @@ const translations: Record<string, Record<Lang, string>> = {
   introCard: { ko: "소개 카드", en: "Intro Card", ja: "紹介カード", zh: "介绍卡" },
   questionCard: { ko: "질문 카드", en: "Question Card", ja: "質問カード", zh: "问题卡" },
   footer: { ko: "created by. 교육뮤지컬 꿈꾸는 치수쌤", en: "created by. 교육뮤지컬 꿈꾸는 치수쌤", ja: "created by. 교육뮤지컬 꿈꾸는 치수쌤", zh: "created by. 교육뮤지컬 꿈꾸는 치수쌤" },
+  downloadJson: { ko: "데이터 저장", en: "Save Data", ja: "データ保存", zh: "保存数据" },
+  uploadJson: { ko: "데이터 복원", en: "Restore Data", ja: "データ復元", zh: "恢复数据" },
 };
 
 export function t(key: string, lang: Lang): string {
