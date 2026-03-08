@@ -2,6 +2,16 @@ import { useRef } from "react";
 import { useAppStore } from "@/lib/useAppStore";
 import { t } from "@/lib/i18n";
 import DrawingCanvas from "./DrawingCanvas";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+
+const EMOJI_LIST = [
+  "😀", "😃", "😄", "😁", "😆", "😅", "😂", "🤣", "🥲", "☺️", 
+  "😊", "😇", "🙂", "🙃", "😉", "😌", "😍", "🥰", "😘", "😗", 
+  "😎", "🤓", "🧐", "🥳", "🤩", "🤪", "🥺", "🥹", "🥸", "😎", 
+  "🐶", "🐱", "🐭", "🐹", "🐰", "🦊", "🐻", "🐼", "🐻‍❄️", "🐨", 
+  "🐯", "🦁", "🐮", "🐷", "🐸", "🐵", "🐧", "🐦", "🐤", "🦉",
+  "📚", "📕", "📘", "📗", "📙", "📖", "📝", "✏️", "🎨", "🎭"
+];
 
 export default function BookCardActivity() {
   const { lang, bookCard, setBookCard, selectedBook } = useAppStore();
@@ -13,6 +23,8 @@ export default function BookCardActivity() {
     const reader = new FileReader();
     reader.onload = () => setBookCard({ uploadedImageUrl: reader.result as string });
     reader.readAsDataURL(file);
+    // Reset file input
+    if (fileRef.current) fileRef.current.value = "";
   };
 
   return (
@@ -33,13 +45,23 @@ export default function BookCardActivity() {
             onChange={(e) => setBookCard({ charName: e.target.value })}
           />
         </div>
-        <div>
-          <label className="text-xs font-bold text-muted-foreground">{t("charTaste", lang)}</label>
-          <input
-            className="input-cute w-full mt-1"
-            value={bookCard.charTaste}
-            onChange={(e) => setBookCard({ charTaste: e.target.value })}
-          />
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label className="text-xs font-bold text-muted-foreground">{t("charLikes", lang)}</label>
+            <input
+              className="input-cute w-full mt-1"
+              value={bookCard.charLikes}
+              onChange={(e) => setBookCard({ charLikes: e.target.value })}
+            />
+          </div>
+          <div>
+            <label className="text-xs font-bold text-muted-foreground">{t("charDislikes", lang)}</label>
+            <input
+              className="input-cute w-full mt-1"
+              value={bookCard.charDislikes}
+              onChange={(e) => setBookCard({ charDislikes: e.target.value })}
+            />
+          </div>
         </div>
         <div>
           <label className="text-xs font-bold text-muted-foreground">{t("charLook", lang)}</label>
@@ -70,12 +92,26 @@ export default function BookCardActivity() {
           </div>
           <div>
             <label className="text-xs font-bold text-muted-foreground">{t("charEmoji", lang)}</label>
-            <input
-              className="input-cute w-full mt-1 text-center text-2xl"
-              value={bookCard.charEmoji}
-              onChange={(e) => setBookCard({ charEmoji: e.target.value })}
-              maxLength={4}
-            />
+            <Popover>
+              <PopoverTrigger asChild>
+                <button className="input-cute w-full mt-1 h-10 flex items-center justify-center text-2xl hover:bg-secondary transition-colors">
+                  {bookCard.charEmoji || "📚"}
+                </button>
+              </PopoverTrigger>
+              <PopoverContent className="w-64 p-2" align="end">
+                <div className="grid grid-cols-6 gap-1 max-h-48 overflow-y-auto custom-scrollbar">
+                  {EMOJI_LIST.map((emoji) => (
+                    <button
+                      key={emoji}
+                      onClick={() => setBookCard({ charEmoji: emoji })}
+                      className="text-2xl hover:bg-secondary rounded p-1 transition-colors"
+                    >
+                      {emoji}
+                    </button>
+                  ))}
+                </div>
+              </PopoverContent>
+            </Popover>
           </div>
         </div>
       </div>
