@@ -16,7 +16,8 @@ export interface BookInfo {
 
 export interface BookCardData {
   charName: string;
-  charTaste: string;
+  charLikes: string;
+  charDislikes: string;
   charLook: string;
   charPhrase: string;
   charColor: string;
