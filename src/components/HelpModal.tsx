@@ -171,12 +171,12 @@ export default function HelpModal() {
 
       {open && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex items-start justify-center pt-[168px] px-4 pb-4 bg-black/50 backdrop-blur-sm"
           onClick={() => setOpen(false)}
         >
           <div
             className="bg-card rounded-2xl shadow-2xl w-full max-w-lg border border-border flex flex-col"
-            style={{ maxHeight: "80vh" }}
+            style={{ maxHeight: "calc(100vh - 180px)" }}
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
