@@ -64,12 +64,11 @@ export default function ThemeSelector() {
   const currentTheme = themes.find((th) => th.id === theme) || themes[0];
 
   return (
-    <div className="flex items-center gap-2 relative">
-      <span className="text-xs font-bold text-muted-foreground">{t("theme", lang)}</span>
+    <div className="flex items-center gap-1.5 relative">
       <div className="relative">
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="rounded-full w-9 h-9 flex items-center justify-center text-xl bg-secondary shadow-sm hover:scale-110 transition-transform border border-border"
+          className="rounded-full w-9 h-9 flex items-center justify-center text-base bg-secondary hover:scale-110 transition-transform border border-border"
         >
           {currentTheme.emoji}
         </button>
