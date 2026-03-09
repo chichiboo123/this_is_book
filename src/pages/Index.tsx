@@ -24,11 +24,11 @@ const Index = () => {
     <div className="min-h-screen bg-background pb-12">
       {/* Header */}
       <header className="sticky top-0 z-50 bg-card/80 backdrop-blur-md border-b border-border shadow-sm">
-        <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between flex-wrap gap-2">
-          <h1 className="text-2xl tracking-tight">
+        <div className="max-w-4xl mx-auto px-3 sm:px-4 py-2 sm:py-3 flex items-center justify-between gap-2">
+          <h1 className="text-lg sm:text-2xl tracking-tight truncate min-w-0">
             📚 {t("appTitle", lang)}
           </h1>
-          <div className="flex items-center gap-2 flex-wrap">
+          <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
             <ThemeSelector />
             <LanguageToggle />
             <HelpModal />
@@ -36,9 +36,9 @@ const Index = () => {
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-4 py-6 space-y-8">
+      <main className="max-w-4xl mx-auto px-3 sm:px-4 py-4 sm:py-6 space-y-6 sm:space-y-8">
         {/* Subtitle */}
-        <p className="text-center text-lg text-muted-foreground font-bold">
+        <p className="text-center text-sm sm:text-lg text-muted-foreground font-bold whitespace-pre-line leading-relaxed">
           {t("appSubtitle", lang)}
         </p>
 
@@ -48,47 +48,47 @@ const Index = () => {
         </section>
 
         {/* Tabbed Cards Area */}
-        <Tabs defaultValue="bookCard" className="w-full space-y-6">
-          <TabsList className="w-full grid grid-cols-3 bg-secondary/50 p-1.5 rounded-xl h-auto">
-            <TabsTrigger value="bookCard" className="py-2.5 rounded-lg font-bold data-[state=active]:bg-card data-[state=active]:shadow-sm data-[state=active]:text-primary">
+        <Tabs defaultValue="bookCard" className="w-full space-y-4 sm:space-y-6">
+          <TabsList className="w-full grid grid-cols-3 bg-secondary/50 p-1 sm:p-1.5 rounded-xl h-auto">
+            <TabsTrigger value="bookCard" className="py-2 sm:py-2.5 rounded-lg text-xs sm:text-sm font-bold data-[state=active]:bg-card data-[state=active]:shadow-sm data-[state=active]:text-primary">
               {t("bookCardTitle", lang)}
             </TabsTrigger>
-            <TabsTrigger value="introCard" className="py-2.5 rounded-lg font-bold data-[state=active]:bg-card data-[state=active]:shadow-sm data-[state=active]:text-primary">
+            <TabsTrigger value="introCard" className="py-2 sm:py-2.5 rounded-lg text-xs sm:text-sm font-bold data-[state=active]:bg-card data-[state=active]:shadow-sm data-[state=active]:text-primary">
               {t("introCardTitle", lang)}
             </TabsTrigger>
-            <TabsTrigger value="questionCard" className="py-2.5 rounded-lg font-bold data-[state=active]:bg-card data-[state=active]:shadow-sm data-[state=active]:text-primary">
+            <TabsTrigger value="questionCard" className="py-2 sm:py-2.5 rounded-lg text-xs sm:text-sm font-bold data-[state=active]:bg-card data-[state=active]:shadow-sm data-[state=active]:text-primary">
               {t("questionCardTitle", lang)}
             </TabsTrigger>
           </TabsList>
 
           <TabsContent value="bookCard" className="mt-0 outline-none animate-in fade-in zoom-in-95 duration-200">
-            <section className="grid md:grid-cols-2 gap-6">
+            <section className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
               <div className="card-activity">
                 <BookCardActivity />
               </div>
-              <div ref={bookCardRef} className="sticky top-24 h-fit">
+              <div ref={bookCardRef} className="md:sticky md:top-24 h-fit">
                 <BookCardPreview />
               </div>
             </section>
           </TabsContent>
 
           <TabsContent value="introCard" className="mt-0 outline-none animate-in fade-in zoom-in-95 duration-200">
-            <section className="grid md:grid-cols-2 gap-6">
+            <section className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
               <div className="card-activity">
                 <IntroCardActivity />
               </div>
-              <div ref={introCardRef} className="sticky top-24 h-fit">
+              <div ref={introCardRef} className="md:sticky md:top-24 h-fit">
                 <IntroCardPreview />
               </div>
             </section>
           </TabsContent>
 
           <TabsContent value="questionCard" className="mt-0 outline-none animate-in fade-in zoom-in-95 duration-200">
-            <section className="grid md:grid-cols-2 gap-6">
+            <section className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
               <div className="card-activity">
                 <QuestionCardActivity />
               </div>
-              <div ref={questionCardRef} className="sticky top-24 h-fit">
+              <div ref={questionCardRef} className="md:sticky md:top-24 h-fit">
                 <QuestionCardPreview />
               </div>
             </section>
