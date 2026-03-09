@@ -99,8 +99,7 @@ export default function ThemeSelector() {
       <button onClick={() => fileRef.current?.click()} title={t("uploadJson", lang)} className="rounded-full w-9 h-9 flex items-center justify-center bg-secondary hover:bg-secondary/80 transition-colors border border-border">
         <Upload size={16} className="text-muted-foreground" />
       </button>
-        <input type="file" ref={fileRef} accept=".json" onChange={importData} className="hidden" />
-      </div>
+      <input type="file" ref={fileRef} accept=".json" onChange={importData} className="hidden" />
     </div>
   );
 }

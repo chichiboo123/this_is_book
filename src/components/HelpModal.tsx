@@ -163,7 +163,7 @@ export default function HelpModal() {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="flex items-center justify-center w-8 h-8 rounded-full bg-secondary hover:bg-secondary/80 transition-colors"
+        className="flex items-center justify-center w-9 h-9 rounded-full bg-secondary hover:bg-secondary/80 transition-colors border border-border"
         title={t("howToUse", lang)}
       >
         <HelpCircle size={18} className="text-muted-foreground" />

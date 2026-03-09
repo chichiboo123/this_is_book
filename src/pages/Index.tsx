@@ -25,9 +25,11 @@ const Index = () => {
       {/* Header */}
       <header className="sticky top-0 z-50 bg-card/80 backdrop-blur-md border-b border-border shadow-sm">
         <div className="max-w-4xl mx-auto px-3 sm:px-4 py-2 sm:py-3 flex items-center justify-between gap-2">
-          <h1 className="text-lg sm:text-2xl tracking-tight truncate min-w-0">
-            📚 {t("appTitle", lang)}
-          </h1>
+          <a href="/" className="flex items-center gap-1.5 min-w-0 hover:opacity-80 transition-opacity">
+            <span className="text-lg sm:text-2xl">📚</span>
+            <span className="text-xl sm:text-3xl tracking-tight font-title">책임</span>
+            <span className="text-xs sm:text-sm text-muted-foreground font-bold">This is Book</span>
+          </a>
           <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
             <ThemeSelector />
             <LanguageToggle />
