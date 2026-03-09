@@ -8,7 +8,7 @@ const helpContent = {
     {
       emoji: "🔍",
       title: "1단계 — 책 검색",
-      desc: "상단 검색창에서 책 제목이나 저자를 검색하고, 마음에 드는 책을 선택하세요. 책 정보가 자동으로 카드에 반영됩니다.",
+      desc: "상단 검색창에서 책 제목/저자를 검색해 책을 선택하세요. 책 정보(부제, ISBN, 설명 등 가능한 항목)가 자동으로 카드에 반영됩니다.",
     },
     {
       emoji: "🎭",
@@ -45,7 +45,7 @@ const helpContent = {
     {
       emoji: "🔍",
       title: "Step 1 — Search a Book",
-      desc: "Search by title or author in the search box at the top, then select your book. Book info is automatically applied to your cards.",
+      desc: "Search by title or author in the top search box, then select a book. Available fields (subtitle, ISBN, description, etc.) are automatically applied to your card.",
     },
     {
       emoji: "🎭",
@@ -82,7 +82,7 @@ const helpContent = {
     {
       emoji: "🔍",
       title: "ステップ1 — 本を検索",
-      desc: "上の検索ボックスでタイトルや著者を検索し、本を選んでください。本の情報が自動的にカードに反映されます。",
+      desc: "上の検索ボックスでタイトルや著者を検索して本を選んでください。取得できる情報（サブタイトル、ISBN、説明など）が自動でカードに反映されます。",
     },
     {
       emoji: "🎭",
@@ -119,7 +119,7 @@ const helpContent = {
     {
       emoji: "🔍",
       title: "第1步 — 搜索书籍",
-      desc: "在顶部搜索框中按书名或作者搜索，然后选择您的书籍。书籍信息会自动应用到卡片中。",
+      desc: "在顶部搜索框中按书名或作者搜索并选择书籍。可获取的信息（副标题、ISBN、简介等）会自动应用到卡片中。",
     },
     {
       emoji: "🎭",
