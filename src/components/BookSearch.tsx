@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useAppStore, type BookInfo } from "@/lib/useAppStore";
 import { t } from "@/lib/i18n";
-import { searchBooks, searchBooksByIsbn } from "@/lib/googleBooks";
+import { searchBooks, searchBooksByIsbn, fetchBookById } from "@/lib/googleBooks";
 import { Search, Camera, ImageUp, X, Loader2 } from "lucide-react";
 import { createWorker } from "tesseract.js";
 
