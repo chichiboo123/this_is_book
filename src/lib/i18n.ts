@@ -11,9 +11,9 @@ const translations: Record<string, Record<Lang, string>> = {
   appTitle: { ko: "책임 · This is Book", en: "This is Book", ja: "これは本", zh: "这是书" },
   appSubtitle: {
     ko: "내가 그의 이름을 불러주었을 때,\n그는 나에게로 와서 책이 되었다",
-    en: "Let's make your own book card! 📚",
-    ja: "自分だけのブックカードを作ろう！📚",
-    zh: "制作属于你的书卡！📚",
+    en: "When I called its name,\nit came to me and became a book.",
+    ja: "私がその名を呼んだとき、\nそれは私のもとへ来て、本になった。",
+    zh: "当我呼唤它的名字时，\n它向我走来，成为了一本书。",
   },
   searchPlaceholder: {
     ko: "책 제목이나 저자를 검색해보세요",
