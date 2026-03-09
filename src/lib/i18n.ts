@@ -102,6 +102,7 @@ const translations: Record<string, Record<Lang, string>> = {
   imageSearchTip: { ko: "책 표지를 촬영하거나 이미지를 업로드해 제목을 자동 인식해요", en: "Take a photo or upload a book cover to auto-detect the title", ja: "本の表紙を撮影してタイトルを自動認識", zh: "拍摄书封面或上传图片自动识别书名" },
   ocrResult: { ko: "인식된 텍스트", en: "Recognized Text", ja: "認識されたテキスト", zh: "识别到的文字" },
   ocrEditHint: { ko: "인식 결과를 수정한 후 검색해보세요", en: "Edit the result then search", ja: "結果を修正して検索", zh: "修改结果后搜索" },
+  captureButton: { ko: "촬영하기", en: "Capture", ja: "撮影する", zh: "拍照" },
 };
 
 export function t(key: string, lang: Lang): string {

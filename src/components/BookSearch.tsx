@@ -216,7 +216,7 @@ export default function BookSearch() {
               onClick={captureImage}
               className="bg-primary text-primary-foreground font-bold px-6 py-2 rounded-full shadow-lg border-2 border-white/20 active:scale-95 transition-transform"
             >
-              촬영하기
+              {t("captureButton", lang)}
             </button>
           </div>
         </div>
