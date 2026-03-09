@@ -1,5 +1,6 @@
 import { useRef } from "react";
 import { useAppStore } from "@/lib/useAppStore";
+import booksIcon from "@/assets/books-icon.png";
 import { t } from "@/lib/i18n";
 import LanguageToggle from "@/components/LanguageToggle";
 import ThemeSelector from "@/components/ThemeSelector";
