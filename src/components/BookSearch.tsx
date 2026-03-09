@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useAppStore, type BookInfo } from "@/lib/useAppStore";
 import { t } from "@/lib/i18n";
-import { searchBooks, searchBooksByIsbn } from "@/lib/googleBooks";
+import { searchBooks, searchBooksByIsbn, fetchBookById } from "@/lib/googleBooks";
 import { Search, Camera, ImageUp, X, Loader2 } from "lucide-react";
 import { createWorker } from "tesseract.js";
 
@@ -34,8 +34,13 @@ export default function BookSearch() {
     setLoading(false);
   };
 
-  const handleSelect = (book: BookInfo) => {
-    setSelectedBook(book);
+  const handleSelect = async (book: BookInfo) => {
+    if (!book.description && book.id) {
+      const detailedBook = await fetchBookById(book.id);
+      setSelectedBook(detailedBook ?? book);
+    } else {
+      setSelectedBook(book);
+    }
     setResults([]);
     setSearched(false);
   };
@@ -347,14 +352,12 @@ function SelectedBookInfo({ book }: { book: BookInfo }) {
           )}
         </div>
       </div>
-      {book.description && (
-        <div>
-          <p className="font-bold text-sm text-primary-foreground/70 mb-1">{t("description", lang)}</p>
-          <p className="text-sm text-foreground leading-relaxed bg-secondary/50 rounded-xl p-3">
-            {book.description}
-          </p>
-        </div>
-      )}
+      <div>
+        <p className="font-bold text-sm text-primary-foreground/70 mb-1">{t("description", lang)}</p>
+        <p className="text-sm text-foreground leading-relaxed bg-secondary/50 rounded-xl p-3">
+          {book.description || (lang === "ko" ? "설명 정보가 없습니다." : "No description available.")}
+        </p>
+      </div>
     </div>
   );
 }

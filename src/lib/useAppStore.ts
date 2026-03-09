@@ -2,6 +2,7 @@ import { create } from "zustand";
 import type { Lang } from "./i18n";
 
 export interface BookInfo {
+  id?: string;
   title: string;
   subtitle?: string;
   authors: string[];
