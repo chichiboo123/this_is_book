@@ -34,8 +34,13 @@ export default function BookSearch() {
     setLoading(false);
   };
 
-  const handleSelect = (book: BookInfo) => {
-    setSelectedBook(book);
+  const handleSelect = async (book: BookInfo) => {
+    if (!book.description && book.id) {
+      const detailedBook = await fetchBookById(book.id);
+      setSelectedBook(detailedBook ?? book);
+    } else {
+      setSelectedBook(book);
+    }
     setResults([]);
     setSearched(false);
   };
