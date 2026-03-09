@@ -27,7 +27,7 @@ const Index = () => {
       <header className="sticky top-0 z-50 bg-card/80 backdrop-blur-md border-b border-border shadow-sm">
         <div className="max-w-4xl mx-auto px-3 sm:px-4 py-2 sm:py-3 flex items-center justify-between gap-2">
           <a href="#" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="flex items-center gap-1.5 min-w-0 hover:opacity-80 transition-opacity cursor-pointer">
-            <span className="text-lg sm:text-2xl">📚</span>
+            <img src={booksIcon} alt="books" className="w-5 h-5 sm:w-7 sm:h-7" />
             <span className="text-xl sm:text-3xl tracking-tight font-title">책임</span>
             <span className="text-xs sm:text-sm text-muted-foreground font-bold">This is Book</span>
           </a>
