@@ -93,13 +93,12 @@ export default function ThemeSelector() {
         )}
       </div>
 
-      <div className="flex gap-1 ml-1 bg-secondary rounded-full p-1 border border-border">
-        <button onClick={exportData} title={t("downloadJson", lang)} className="p-1.5 text-muted-foreground hover:text-foreground hover:bg-background rounded-full transition-colors">
-          <Download size={16} />
-        </button>
-        <button onClick={() => fileRef.current?.click()} title={t("uploadJson", lang)} className="p-1.5 text-muted-foreground hover:text-foreground hover:bg-background rounded-full transition-colors">
-          <Upload size={16} />
-        </button>
+      <button onClick={exportData} title={t("downloadJson", lang)} className="rounded-full w-9 h-9 flex items-center justify-center bg-secondary hover:bg-secondary/80 transition-colors border border-border">
+        <Download size={16} className="text-muted-foreground" />
+      </button>
+      <button onClick={() => fileRef.current?.click()} title={t("uploadJson", lang)} className="rounded-full w-9 h-9 flex items-center justify-center bg-secondary hover:bg-secondary/80 transition-colors border border-border">
+        <Upload size={16} className="text-muted-foreground" />
+      </button>
         <input type="file" ref={fileRef} accept=".json" onChange={importData} className="hidden" />
       </div>
     </div>
