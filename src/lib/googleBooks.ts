@@ -1,5 +1,11 @@
 import type { BookInfo } from "./useAppStore";
 
+export async function searchBooksByIsbn(isbn: string): Promise<BookInfo[]> {
+  // Clean the ISBN (remove hyphens/spaces)
+  const cleaned = isbn.replace(/[-\s]/g, "");
+  return searchBooks(`isbn:${cleaned}`);
+}
+
 export async function searchBooks(query: string): Promise<BookInfo[]> {
   if (!query.trim()) return [];
   const res = await fetch(
