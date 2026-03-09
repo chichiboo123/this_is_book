@@ -170,10 +170,17 @@ export default function HelpModal() {
       </button>
 
       {open && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 backdrop-blur-sm">
-          <div className="bg-card rounded-t-2xl sm:rounded-2xl shadow-2xl w-full sm:max-w-lg max-h-[90vh] sm:max-h-[85vh] flex flex-col border border-border sm:m-4">
+        <div
+          className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 backdrop-blur-sm"
+          onClick={() => setOpen(false)}
+        >
+          <div
+            className="bg-card rounded-t-2xl sm:rounded-2xl shadow-2xl w-full sm:max-w-lg border border-border sm:m-4"
+            style={{ maxHeight: "85vh", display: "flex", flexDirection: "column" }}
+            onClick={(e) => e.stopPropagation()}
+          >
             {/* Header */}
-            <div className="flex items-center justify-between p-4 sm:p-5 border-b border-border flex-shrink-0">
+            <div className="flex items-center justify-between p-4 sm:p-5 border-b border-border" style={{ flexShrink: 0 }}>
               <div className="min-w-0">
                 <h2 className="text-base sm:text-lg font-bold truncate">📚 {t("howToUse", lang)}</h2>
                 <p className="text-xs text-muted-foreground mt-0.5">created by. 교육뮤지컬 꿈꾸는 치수쌤</p>
@@ -187,7 +194,10 @@ export default function HelpModal() {
             </div>
 
             {/* Content */}
-            <div className="overflow-y-auto flex-1 min-h-0 p-4 sm:p-5 space-y-3 sm:space-y-4">
+            <div
+              className="p-4 sm:p-5 space-y-3 sm:space-y-4"
+              style={{ overflowY: "auto", flex: "1 1 0%", minHeight: 0 }}
+            >
               {content.map((item, i) => (
                 <div key={i} className="flex gap-3 p-3 rounded-xl bg-secondary/40">
                   <span className="text-xl sm:text-2xl flex-shrink-0">{item.emoji}</span>
