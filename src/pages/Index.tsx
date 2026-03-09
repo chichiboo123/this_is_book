@@ -48,15 +48,15 @@ const Index = () => {
         </section>
 
         {/* Tabbed Cards Area */}
-        <Tabs defaultValue="bookCard" className="w-full space-y-6">
-          <TabsList className="w-full grid grid-cols-3 bg-secondary/50 p-1.5 rounded-xl h-auto">
-            <TabsTrigger value="bookCard" className="py-2.5 rounded-lg font-bold data-[state=active]:bg-card data-[state=active]:shadow-sm data-[state=active]:text-primary">
+        <Tabs defaultValue="bookCard" className="w-full space-y-4 sm:space-y-6">
+          <TabsList className="w-full grid grid-cols-3 bg-secondary/50 p-1 sm:p-1.5 rounded-xl h-auto">
+            <TabsTrigger value="bookCard" className="py-2 sm:py-2.5 rounded-lg text-xs sm:text-sm font-bold data-[state=active]:bg-card data-[state=active]:shadow-sm data-[state=active]:text-primary">
               {t("bookCardTitle", lang)}
             </TabsTrigger>
-            <TabsTrigger value="introCard" className="py-2.5 rounded-lg font-bold data-[state=active]:bg-card data-[state=active]:shadow-sm data-[state=active]:text-primary">
+            <TabsTrigger value="introCard" className="py-2 sm:py-2.5 rounded-lg text-xs sm:text-sm font-bold data-[state=active]:bg-card data-[state=active]:shadow-sm data-[state=active]:text-primary">
               {t("introCardTitle", lang)}
             </TabsTrigger>
-            <TabsTrigger value="questionCard" className="py-2.5 rounded-lg font-bold data-[state=active]:bg-card data-[state=active]:shadow-sm data-[state=active]:text-primary">
+            <TabsTrigger value="questionCard" className="py-2 sm:py-2.5 rounded-lg text-xs sm:text-sm font-bold data-[state=active]:bg-card data-[state=active]:shadow-sm data-[state=active]:text-primary">
               {t("questionCardTitle", lang)}
             </TabsTrigger>
           </TabsList>
