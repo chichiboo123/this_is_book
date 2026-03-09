@@ -18,9 +18,11 @@ export default function QuestionCardPreview() {
             <p className="text-sm font-bold">
               ❓ {t("questionLabel", lang)} {i + 1}: {q.question || "..."}
             </p>
-            <p className="text-sm text-muted-foreground">
-              💡 {t("answerLabel", lang)}: {q.answer || "..."}
-            </p>
+            {q.answer && (
+              <p className="text-sm text-muted-foreground">
+                💡 {q.answer}
+              </p>
+            )}
           </div>
         ))}
       </div>

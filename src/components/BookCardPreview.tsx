@@ -13,7 +13,7 @@ export default function BookCardPreview() {
       }}
     >
       <div className="text-center">
-        <span className="text-4xl">{bookCard.charEmoji}</span>
+        {bookCard.charEmoji && <span className="text-4xl">{bookCard.charEmoji}</span>}
         <h3 className="font-title text-xl mt-1">{bookCard.charName || "..."}</h3>
         {selectedBook && (
           <p className="text-xs text-muted-foreground mt-0.5">

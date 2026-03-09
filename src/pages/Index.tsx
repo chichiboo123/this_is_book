@@ -3,6 +3,7 @@ import { useAppStore } from "@/lib/useAppStore";
 import { t } from "@/lib/i18n";
 import LanguageToggle from "@/components/LanguageToggle";
 import ThemeSelector from "@/components/ThemeSelector";
+import HelpModal from "@/components/HelpModal";
 import BookSearch from "@/components/BookSearch";
 import BookCardActivity from "@/components/BookCardActivity";
 import IntroCardActivity from "@/components/IntroCardActivity";
@@ -27,9 +28,10 @@ const Index = () => {
           <h1 className="text-2xl tracking-tight">
             📚 {t("appTitle", lang)}
           </h1>
-          <div className="flex items-center gap-3 flex-wrap">
+          <div className="flex items-center gap-2 flex-wrap">
             <ThemeSelector />
             <LanguageToggle />
+            <HelpModal />
           </div>
         </div>
       </header>

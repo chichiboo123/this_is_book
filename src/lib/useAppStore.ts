@@ -38,12 +38,14 @@ interface AppState {
   selectedBook: BookInfo | null;
   bookCard: BookCardData;
   introText: string;
+  introImageUrl: string | null;
   questions: QuestionItem[];
   setLang: (l: Lang) => void;
   setTheme: (t: "blue" | "green" | "yellow" | "pink") => void;
   setSelectedBook: (b: BookInfo | null) => void;
   setBookCard: (data: Partial<BookCardData>) => void;
   setIntroText: (t: string) => void;
+  setIntroImageUrl: (url: string | null) => void;
   setQuestions: (q: QuestionItem[]) => void;
   addQuestion: () => void;
 }
@@ -59,11 +61,12 @@ export const useAppStore = create<AppState>((set) => ({
     charLook: "",
     charPhrase: "",
     charColor: "#A8D8EA",
-    charEmoji: "📚",
+    charEmoji: "",
     drawingDataUrl: null,
     uploadedImageUrl: null,
   },
   introText: "",
+  introImageUrl: null,
   questions: [{ id: "1", question: "", answer: "" }],
   setLang: (lang) => set({ lang }),
   setTheme: (theme) => {
@@ -74,6 +77,7 @@ export const useAppStore = create<AppState>((set) => ({
   setBookCard: (data) =>
     set((s) => ({ bookCard: { ...s.bookCard, ...data } })),
   setIntroText: (introText) => set({ introText }),
+  setIntroImageUrl: (introImageUrl) => set({ introImageUrl }),
   setQuestions: (questions) => set({ questions }),
   addQuestion: () =>
     set((s) => ({
