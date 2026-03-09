@@ -62,33 +62,33 @@ const Index = () => {
           </TabsList>
 
           <TabsContent value="bookCard" className="mt-0 outline-none animate-in fade-in zoom-in-95 duration-200">
-            <section className="grid md:grid-cols-2 gap-6">
+            <section className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
               <div className="card-activity">
                 <BookCardActivity />
               </div>
-              <div ref={bookCardRef} className="sticky top-24 h-fit">
+              <div ref={bookCardRef} className="md:sticky md:top-24 h-fit">
                 <BookCardPreview />
               </div>
             </section>
           </TabsContent>
 
           <TabsContent value="introCard" className="mt-0 outline-none animate-in fade-in zoom-in-95 duration-200">
-            <section className="grid md:grid-cols-2 gap-6">
+            <section className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
               <div className="card-activity">
                 <IntroCardActivity />
               </div>
-              <div ref={introCardRef} className="sticky top-24 h-fit">
+              <div ref={introCardRef} className="md:sticky md:top-24 h-fit">
                 <IntroCardPreview />
               </div>
             </section>
           </TabsContent>
 
           <TabsContent value="questionCard" className="mt-0 outline-none animate-in fade-in zoom-in-95 duration-200">
-            <section className="grid md:grid-cols-2 gap-6">
+            <section className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
               <div className="card-activity">
                 <QuestionCardActivity />
               </div>
-              <div ref={questionCardRef} className="sticky top-24 h-fit">
+              <div ref={questionCardRef} className="md:sticky md:top-24 h-fit">
                 <QuestionCardPreview />
               </div>
             </section>
