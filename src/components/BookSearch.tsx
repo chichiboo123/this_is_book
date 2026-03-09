@@ -3,7 +3,7 @@ import { useAppStore, type BookInfo } from "@/lib/useAppStore";
 import { t } from "@/lib/i18n";
 import { searchBooks, searchBooksByIsbn } from "@/lib/googleBooks";
 import { Search, Camera, ImageUp, X, ZapIcon } from "lucide-react";
-import { BrowserMultiFormatReader } from "@zxing/browser";
+import { BrowserMultiFormatReader, BrowserCodeReader, type IScannerControls } from "@zxing/browser";
 
 export default function BookSearch() {
   const { lang, setSelectedBook, selectedBook } = useAppStore();
@@ -15,7 +15,7 @@ export default function BookSearch() {
   const [scanStatus, setScanStatus] = useState<"idle" | "scanning" | "success" | "error">("idle");
 
   const videoRef = useRef<HTMLVideoElement>(null);
-  const readerRef = useRef<BrowserMultiFormatReader | null>(null);
+  const controlsRef = useRef<IScannerControls | null>(null);
   const imageInputRef = useRef<HTMLInputElement>(null);
 
   const handleSearch = async () => {
@@ -34,13 +34,14 @@ export default function BookSearch() {
   };
 
   // ── Barcode scan ───────────────────────────────────────────────
-  const startScan = async () => {
+  const startScan = () => {
     setScanMode(true);
     setScanStatus("scanning");
   };
 
   const stopScan = () => {
-    readerRef.current?.reset();
+    controlsRef.current?.stop();
+    BrowserCodeReader.releaseAllStreams();
     setScanMode(false);
     setScanStatus("idle");
   };
@@ -49,13 +50,14 @@ export default function BookSearch() {
     if (!scanMode || !videoRef.current) return;
 
     const codeReader = new BrowserMultiFormatReader();
-    readerRef.current = codeReader;
 
-    codeReader.decodeFromVideoDevice(undefined, videoRef.current, async (result, err) => {
+    codeReader.decodeFromVideoDevice(undefined, videoRef.current, async (result, err, controls) => {
+      controlsRef.current = controls;
       if (result) {
         const isbn = result.getText();
         setScanStatus("success");
-        codeReader.reset();
+        controls.stop();
+        BrowserCodeReader.releaseAllStreams();
         setScanMode(false);
         setLoading(true);
         setSearched(true);
@@ -63,7 +65,6 @@ export default function BookSearch() {
         if (books.length > 0) {
           setResults(books);
         } else {
-          // Fallback: search by the raw text
           const fallback = await searchBooks(isbn);
           setResults(fallback);
         }
@@ -73,7 +74,8 @@ export default function BookSearch() {
     });
 
     return () => {
-      codeReader.reset();
+      controlsRef.current?.stop();
+      BrowserCodeReader.releaseAllStreams();
     };
   }, [scanMode]);
 
@@ -107,7 +109,7 @@ export default function BookSearch() {
           setScanStatus(fallback.length > 0 ? "success" : "error");
         }
       } catch {
-        // No barcode found — search by filename hint or show error
+        // No barcode found
         URL.revokeObjectURL(url);
         setScanStatus("error");
         setResults([]);
@@ -119,7 +121,6 @@ export default function BookSearch() {
 
     setLoading(false);
     setTimeout(() => setScanStatus("idle"), 2000);
-    // reset input so same file can be re-selected
     if (imageInputRef.current) imageInputRef.current.value = "";
   };
 
@@ -186,8 +187,8 @@ export default function BookSearch() {
             <div className="w-48 h-28 border-2 border-primary rounded-xl opacity-70" />
           </div>
           <div className="absolute bottom-2 left-0 right-0 flex justify-center">
-            <span className="bg-black/60 text-white text-xs px-3 py-1 rounded-full flex items-center gap-1">
-              <ZapIcon className="w-3 h-3 text-yellow-400" />
+            <span className="bg-background/80 text-foreground text-xs px-3 py-1 rounded-full flex items-center gap-1">
+              <ZapIcon className="w-3 h-3 text-primary" />
               {t("scanningCamera", lang)}
             </span>
           </div>
