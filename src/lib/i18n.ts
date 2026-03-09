@@ -8,9 +8,9 @@ export const LANG_LABELS: Record<Lang, string> = {
 };
 
 const translations: Record<string, Record<Lang, string>> = {
-  appTitle: { ko: "책임", en: "This is Book", ja: "これは本", zh: "这是书" },
+  appTitle: { ko: "책임 · This is Book", en: "This is Book", ja: "これは本", zh: "这是书" },
   appSubtitle: {
-    ko: "나만의 책 카드를 만들어보자! 📚",
+    ko: "내가 그의 이름을 불러주었을 때,\n그는 나에게로 와서 책이 되었다",
     en: "Let's make your own book card! 📚",
     ja: "自分だけのブックカードを作ろう！📚",
     zh: "制作属于你的书卡！📚",
