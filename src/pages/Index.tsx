@@ -3,6 +3,7 @@ import { useAppStore } from "@/lib/useAppStore";
 import { t } from "@/lib/i18n";
 import LanguageToggle from "@/components/LanguageToggle";
 import ThemeSelector from "@/components/ThemeSelector";
+import HelpModal from "@/components/HelpModal";
 import BookSearch from "@/components/BookSearch";
 import BookCardActivity from "@/components/BookCardActivity";
 import IntroCardActivity from "@/components/IntroCardActivity";
