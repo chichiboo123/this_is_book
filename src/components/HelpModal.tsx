@@ -45,7 +45,7 @@ const helpContent = {
     {
       emoji: "🔍",
       title: "Step 1 — Search a Book",
-      desc: "Search by title or author in the search box at the top, then select your book. Book info is automatically applied to your cards.",
+      desc: "Search by title or author in the top search box, then select a book. Available fields (subtitle, ISBN, description, etc.) are automatically applied to your card.",
     },
     {
       emoji: "🎭",
