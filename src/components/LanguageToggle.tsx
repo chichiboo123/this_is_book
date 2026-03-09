@@ -24,10 +24,9 @@ export default function LanguageToggle() {
     <div ref={ref} className="relative">
       <button
         onClick={() => setOpen((o) => !o)}
-        className="flex items-center gap-1.5 rounded-full bg-secondary px-3 py-1.5 text-xs font-bold hover:bg-secondary/80 transition-colors"
+        className="flex items-center gap-1.5 rounded-full bg-secondary w-9 h-9 justify-center text-xs font-bold hover:bg-secondary/80 transition-colors border border-border"
       >
-        {LANG_LABELS[lang]}
-        <ChevronDown size={12} className={`transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
+        <span className="text-[10px] leading-none">{lang.toUpperCase()}</span>
       </button>
 
       {open && (
