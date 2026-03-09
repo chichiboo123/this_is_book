@@ -3,14 +3,18 @@ import type { Lang } from "./i18n";
 
 export interface BookInfo {
   title: string;
+  subtitle?: string;
   authors: string[];
   publisher?: string;
   publishedDate?: string;
   description?: string;
   pageCount?: number;
+  printType?: string;
   categories?: string[];
   imageLinks?: { thumbnail?: string; smallThumbnail?: string };
   isbn?: string;
+  isbn13?: string;
+  isbn10?: string;
   language?: string;
 }
 

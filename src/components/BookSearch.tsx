@@ -312,12 +312,16 @@ function SelectedBookInfo({ book }: { book: BookInfo }) {
 
   const infoRows: [string, string | undefined][] = [
     [t("title", lang), book.title],
+    [lang === "ko" ? "부제" : "Subtitle", book.subtitle],
     [t("author", lang), book.authors?.join(", ")],
     [t("publisher", lang), book.publisher],
     [t("publishedDate", lang), book.publishedDate],
     [t("pages", lang), book.pageCount?.toString()],
+    [lang === "ko" ? "출판 형태" : "Print Type", book.printType],
     [t("categories", lang), book.categories?.join(", ")],
     [t("isbn", lang), book.isbn],
+    ["ISBN-13", book.isbn13],
+    ["ISBN-10", book.isbn10],
     [t("language", lang), book.language],
   ];
 

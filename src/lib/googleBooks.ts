@@ -25,14 +25,18 @@ export async function searchBooks(query: string): Promise<BookInfo[]> {
 
     return {
       title: v.title || "",
+      subtitle: v.subtitle,
       authors: v.authors || [],
       publisher: v.publisher,
       publishedDate: v.publishedDate,
       description: v.description,
       pageCount: v.pageCount,
+      printType: v.printType,
       categories: v.categories,
       imageLinks: v.imageLinks,
       isbn: isbn13?.identifier || isbn10?.identifier,
+      isbn13: isbn13?.identifier,
+      isbn10: isbn10?.identifier,
       language: v.language,
     } as BookInfo;
   });
