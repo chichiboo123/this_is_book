@@ -171,53 +171,56 @@ export default function HelpModal() {
 
       {open && (
         <div
-          className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 backdrop-blur-sm"
+          className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm"
           onClick={() => setOpen(false)}
         >
-          <div
-            className="bg-card rounded-t-2xl sm:rounded-2xl shadow-2xl w-full sm:max-w-lg border border-border sm:m-4"
-            style={{ maxHeight: "85dvh", display: "flex", flexDirection: "column" }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Header */}
-            <div className="flex items-center justify-between p-4 sm:p-5 border-b border-border" style={{ flexShrink: 0 }}>
-              <div className="min-w-0">
-                <h2 className="text-base sm:text-lg font-bold truncate">📚 {t("howToUse", lang)}</h2>
-                <p className="text-xs text-muted-foreground mt-0.5">created by. 교육뮤지컬 꿈꾸는 치수쌤</p>
-              </div>
-              <button
-                onClick={() => setOpen(false)}
-                className="w-8 h-8 flex-shrink-0 flex items-center justify-center rounded-full hover:bg-secondary transition-colors ml-2"
-              >
-                <X size={18} />
-              </button>
-            </div>
-
-            {/* Content */}
+          {/* 모바일: 하단 시트 / 데스크톱: 중앙 배치 — 외부 패딩으로 높이를 명시적으로 제한 */}
+          <div className="absolute inset-x-0 bottom-0 sm:inset-0 flex items-end sm:items-center justify-center sm:p-10">
             <div
-              className="p-4 sm:p-5 space-y-3 sm:space-y-4 pb-safe"
-              style={{ overflowY: "auto", flex: "1 1 0%", minHeight: 0, paddingBottom: "calc(1.25rem + env(safe-area-inset-bottom))" }}
+              className="bg-card rounded-t-2xl sm:rounded-2xl shadow-2xl w-full sm:max-w-lg border border-border flex flex-col overflow-hidden"
+              style={{ maxHeight: "85svh" }}
+              onClick={(e) => e.stopPropagation()}
             >
-              {content.map((item, i) => (
-                <div key={i} className="flex gap-3 p-3 rounded-xl bg-secondary/40">
-                  <span className="text-xl sm:text-2xl flex-shrink-0">{item.emoji}</span>
-                  <div className="min-w-0">
-                    <p className="font-bold text-sm mb-1">{item.title}</p>
-                    <p className="text-xs text-muted-foreground leading-relaxed">{item.desc}</p>
-                  </div>
+              {/* Header */}
+              <div className="flex items-center justify-between p-4 sm:p-5 border-b border-border flex-shrink-0">
+                <div className="min-w-0">
+                  <h2 className="text-base sm:text-lg font-bold truncate">📚 {t("howToUse", lang)}</h2>
+                  <p className="text-xs text-muted-foreground mt-0.5">created by. 교육뮤지컬 꿈꾸는 치수쌤</p>
                 </div>
-              ))}
-
-              <div className="mt-3 p-3 sm:p-4 rounded-xl bg-primary/10 border border-primary/20 text-center">
-                <p className="text-sm font-bold text-primary">💌 도움이 필요하면 언제든지 물어보세요!</p>
-                <a
-                  href="https://litt.ly/chichiboo"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-xs text-muted-foreground hover:text-primary transition-colors mt-1 block"
+                <button
+                  onClick={() => setOpen(false)}
+                  className="w-8 h-8 flex-shrink-0 flex items-center justify-center rounded-full hover:bg-secondary transition-colors ml-2"
                 >
-                  교육뮤지컬 꿈꾸는 치수쌤 →
-                </a>
+                  <X size={18} />
+                </button>
+              </div>
+
+              {/* Content — flex: 1 + minHeight: 0 으로 스크롤 영역 확보 */}
+              <div
+                className="p-4 sm:p-5 space-y-3 sm:space-y-4"
+                style={{ overflowY: "auto", flex: "1 1 0", minHeight: 0 }}
+              >
+                {content.map((item, i) => (
+                  <div key={i} className="flex gap-3 p-3 rounded-xl bg-secondary/40">
+                    <span className="text-xl sm:text-2xl flex-shrink-0">{item.emoji}</span>
+                    <div className="min-w-0">
+                      <p className="font-bold text-sm mb-1">{item.title}</p>
+                      <p className="text-xs text-muted-foreground leading-relaxed">{item.desc}</p>
+                    </div>
+                  </div>
+                ))}
+
+                <div className="mt-3 p-3 sm:p-4 rounded-xl bg-primary/10 border border-primary/20 text-center">
+                  <p className="text-sm font-bold text-primary">💌 도움이 필요하면 언제든지 물어보세요!</p>
+                  <a
+                    href="https://litt.ly/chichiboo"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs text-muted-foreground hover:text-primary transition-colors mt-1 block"
+                  >
+                    교육뮤지컬 꿈꾸는 치수쌤 →
+                  </a>
+                </div>
               </div>
             </div>
           </div>
