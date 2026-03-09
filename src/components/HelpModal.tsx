@@ -8,7 +8,7 @@ const helpContent = {
     {
       emoji: "🔍",
       title: "1단계 — 책 검색",
-      desc: "상단 검색창에서 책 제목/저자를 검색해 책을 선택하세요. 책 정보(부제, ISBN, 설명 등 가능한 항목)가 자동으로 카드에 반영됩니다.",
+      desc: "상단 검색창에서 책 제목/저자를 검색해 책을 선택하세요. 책 정보가 등장합니다.",
     },
     {
       emoji: "🎭",
@@ -28,7 +28,7 @@ const helpContent = {
     {
       emoji: "💾",
       title: "데이터 저장 & 복원",
-      desc: "오른쪽 상단의 💾 아이콘으로 작업 내용을 JSON 파일로 저장할 수 있어요. 나중에 📂 아이콘으로 불러와서 이어서 작업할 수 있답니다!",
+      desc: "오른쪽 상단의 💾 아이콘으로 작업 내용을 JSON 파일로 저장할 수 있어요. 📂 아이콘으로 불러와서 이어서 작업할 수 있답니다!",
     },
     {
       emoji: "📥",
@@ -45,12 +45,12 @@ const helpContent = {
     {
       emoji: "🔍",
       title: "Step 1 — Search a Book",
-      desc: "Search by title or author in the top search box, then select a book. Available fields (subtitle, ISBN, description, etc.) are automatically applied to your card.",
+      desc: "Search by title or author in the top search box, then select a book. Available fields are automatically applied to your card.",
     },
     {
       emoji: "🎭",
       title: "Step 2 — Book Card",
-      desc: "Analyze a character from the book! Enter their name, likes/dislikes, features, and catchphrase. Pick a matching color and emoji. You can also draw or upload an image.",
+      desc: "Imagine your book is a character! What do they look like? Let’s make a book card.",
     },
     {
       emoji: "📝",
@@ -82,12 +82,12 @@ const helpContent = {
     {
       emoji: "🔍",
       title: "ステップ1 — 本を検索",
-      desc: "上の検索ボックスでタイトルや著者を検索して本を選んでください。取得できる情報（サブタイトル、ISBN、説明など）が自動でカードに反映されます。",
+      desc: "上の検索ボックスでタイトルや著者を検索して本を選んでください。取得できる情報 が自動でカードに反映されます。",
     },
     {
       emoji: "🎭",
       title: "ステップ2 — ブックカード",
-      desc: "登場人物を分析しよう！名前、好き嫌い、特徴、口癖を入力し、似合う色と絵文字を選ぼう。絵を描いたり画像をアップロードもできます。",
+      desc: "もし本がキャラクターだったら？そうぞうして、じぶんだけの本カードをつくろう！",
     },
     {
       emoji: "📝",
@@ -119,12 +119,12 @@ const helpContent = {
     {
       emoji: "🔍",
       title: "第1步 — 搜索书籍",
-      desc: "在顶部搜索框中按书名或作者搜索并选择书籍。可获取的信息（副标题、ISBN、简介等）会自动应用到卡片中。",
+      desc: "在顶部搜索框中按书名或作者搜索并选择书籍。可获取的信息 会自动应用到卡片中。",
     },
     {
       emoji: "🎭",
       title: "第2步 — 书卡",
-      desc: "分析书中的人物！输入名字、喜欢/讨厌的事物、特征和口头禅。选择搭配的颜色和表情。也可以画画或上传图片。",
+      desc: "如果你选的书变成了一个角色，它会是什么样子的？发挥想象力，做一张图书卡吧！",
     },
     {
       emoji: "📝",
@@ -205,7 +205,7 @@ export default function HelpModal() {
                 </div>
               ))}
               <div className="p-3 sm:p-4 rounded-xl bg-primary/10 border border-primary/20 text-center">
-                <p className="text-sm font-bold text-primary">💌 도움이 필요하면 언제든지 물어보세요!</p>
+                <p className="text-sm font-bold text-primary">💌 도움이 필요하면 물어보세요!</p>
                 <a
                   href="https://litt.ly/chichiboo"
                   target="_blank"
