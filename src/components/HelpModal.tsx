@@ -170,35 +170,35 @@ export default function HelpModal() {
       </button>
 
       {open && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-          <div className="bg-card rounded-2xl shadow-2xl w-full max-w-lg max-h-[85vh] flex flex-col border border-border">
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="bg-card rounded-t-2xl sm:rounded-2xl shadow-2xl w-full sm:max-w-lg max-h-[90vh] sm:max-h-[85vh] flex flex-col border border-border sm:m-4">
             {/* Header */}
-            <div className="flex items-center justify-between p-5 border-b border-border">
-              <div>
-                <h2 className="text-lg font-bold">📚 {t("howToUse", lang)}</h2>
+            <div className="flex items-center justify-between p-4 sm:p-5 border-b border-border flex-shrink-0">
+              <div className="min-w-0">
+                <h2 className="text-base sm:text-lg font-bold truncate">📚 {t("howToUse", lang)}</h2>
                 <p className="text-xs text-muted-foreground mt-0.5">created by. 교육뮤지컬 꿈꾸는 치수쌤</p>
               </div>
               <button
                 onClick={() => setOpen(false)}
-                className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-secondary transition-colors"
+                className="w-8 h-8 flex-shrink-0 flex items-center justify-center rounded-full hover:bg-secondary transition-colors ml-2"
               >
                 <X size={18} />
               </button>
             </div>
 
             {/* Content */}
-            <div className="overflow-y-auto p-5 space-y-4 custom-scrollbar">
+            <div className="overflow-y-auto flex-1 min-h-0 p-4 sm:p-5 space-y-3 sm:space-y-4">
               {content.map((item, i) => (
                 <div key={i} className="flex gap-3 p-3 rounded-xl bg-secondary/40">
-                  <span className="text-2xl flex-shrink-0">{item.emoji}</span>
-                  <div>
+                  <span className="text-xl sm:text-2xl flex-shrink-0">{item.emoji}</span>
+                  <div className="min-w-0">
                     <p className="font-bold text-sm mb-1">{item.title}</p>
                     <p className="text-xs text-muted-foreground leading-relaxed">{item.desc}</p>
                   </div>
                 </div>
               ))}
 
-              <div className="mt-4 p-4 rounded-xl bg-primary/10 border border-primary/20 text-center">
+              <div className="mt-3 p-3 sm:p-4 rounded-xl bg-primary/10 border border-primary/20 text-center">
                 <p className="text-sm font-bold text-primary">💌 도움이 필요하면 언제든지 물어보세요!</p>
                 <a
                   href="https://litt.ly/chichiboo"

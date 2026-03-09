@@ -24,11 +24,11 @@ const Index = () => {
     <div className="min-h-screen bg-background pb-12">
       {/* Header */}
       <header className="sticky top-0 z-50 bg-card/80 backdrop-blur-md border-b border-border shadow-sm">
-        <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between flex-wrap gap-2">
-          <h1 className="text-2xl tracking-tight">
+        <div className="max-w-4xl mx-auto px-3 sm:px-4 py-2 sm:py-3 flex items-center justify-between gap-2">
+          <h1 className="text-lg sm:text-2xl tracking-tight truncate min-w-0">
             📚 {t("appTitle", lang)}
           </h1>
-          <div className="flex items-center gap-2 flex-wrap">
+          <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
             <ThemeSelector />
             <LanguageToggle />
             <HelpModal />
@@ -36,9 +36,9 @@ const Index = () => {
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-4 py-6 space-y-8">
+      <main className="max-w-4xl mx-auto px-3 sm:px-4 py-4 sm:py-6 space-y-6 sm:space-y-8">
         {/* Subtitle */}
-        <p className="text-center text-lg text-muted-foreground font-bold">
+        <p className="text-center text-sm sm:text-lg text-muted-foreground font-bold whitespace-pre-line leading-relaxed">
           {t("appSubtitle", lang)}
         </p>
 
