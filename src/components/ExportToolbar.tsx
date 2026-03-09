@@ -64,7 +64,7 @@ export default function ExportToolbar({ cardRefs }: ExportToolbarProps) {
     <div className="card-activity space-y-4 border-2 border-primary/20">
       <h3 className="section-title text-lg mb-2 flex items-center gap-2">
         <Download size={20} />
-        {t("exportImage", lang)}
+        {t("exportSection", lang)}
       </h3>
 
       <div className="grid gap-4 sm:grid-cols-3">
