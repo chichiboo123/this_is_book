@@ -1,9 +1,9 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { useAppStore, type BookInfo } from "@/lib/useAppStore";
 import { t } from "@/lib/i18n";
 import { searchBooks, searchBooksByIsbn } from "@/lib/googleBooks";
-import { Search, Camera, ImageUp, X, ZapIcon } from "lucide-react";
-import { BrowserMultiFormatReader, BrowserCodeReader, type IScannerControls } from "@zxing/browser";
+import { Search, Camera, ImageUp, X, Loader2 } from "lucide-react";
+import { createWorker } from "tesseract.js";
 
 export default function BookSearch() {
   const { lang, setSelectedBook, selectedBook } = useAppStore();
@@ -11,18 +11,21 @@ export default function BookSearch() {
   const [results, setResults] = useState<BookInfo[]>([]);
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
-  const [scanMode, setScanMode] = useState(false);
-  const [scanStatus, setScanStatus] = useState<"idle" | "scanning" | "success" | "error">("idle");
 
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const controlsRef = useRef<IScannerControls | null>(null);
+  // OCR state
+  const [ocrStatus, setOcrStatus] = useState<"idle" | "ocr" | "done" | "error">("idle");
+  const [ocrText, setOcrText] = useState("");
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
+  const cameraInputRef = useRef<HTMLInputElement>(null);
   const imageInputRef = useRef<HTMLInputElement>(null);
 
-  const handleSearch = async () => {
-    if (!query.trim()) return;
+  const handleSearch = async (searchQuery?: string) => {
+    const q = (searchQuery ?? query).trim();
+    if (!q) return;
     setLoading(true);
     setSearched(true);
-    const books = await searchBooks(query);
+    const books = await searchBooks(q);
     setResults(books);
     setLoading(false);
   };
@@ -33,95 +36,53 @@ export default function BookSearch() {
     setSearched(false);
   };
 
-  // ── Barcode scan ───────────────────────────────────────────────
-  const startScan = () => {
-    setScanMode(true);
-    setScanStatus("scanning");
+  const clearOcr = () => {
+    setOcrText("");
+    setOcrStatus("idle");
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    setPreviewUrl(null);
+    if (cameraInputRef.current) cameraInputRef.current.value = "";
+    if (imageInputRef.current) imageInputRef.current.value = "";
   };
 
-  const stopScan = () => {
-    controlsRef.current?.stop();
-    BrowserCodeReader.releaseAllStreams();
-    setScanMode(false);
-    setScanStatus("idle");
-  };
-
-  useEffect(() => {
-    if (!scanMode || !videoRef.current) return;
-
-    const codeReader = new BrowserMultiFormatReader();
-
-    codeReader.decodeFromVideoDevice(undefined, videoRef.current, async (result, err, controls) => {
-      controlsRef.current = controls;
-      if (result) {
-        const isbn = result.getText();
-        setScanStatus("success");
-        controls.stop();
-        BrowserCodeReader.releaseAllStreams();
-        setScanMode(false);
-        setLoading(true);
-        setSearched(true);
-        const books = await searchBooksByIsbn(isbn);
-        if (books.length > 0) {
-          setResults(books);
-        } else {
-          const fallback = await searchBooks(isbn);
-          setResults(fallback);
-        }
-        setLoading(false);
-        setScanStatus("idle");
-      }
-    });
-
-    return () => {
-      controlsRef.current?.stop();
-      BrowserCodeReader.releaseAllStreams();
-    };
-  }, [scanMode]);
-
-  // ── Image file upload → barcode decode ────────────────────────
-  const handleImageFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    setScanStatus("scanning");
-    setLoading(true);
-    setSearched(true);
+  // ── OCR with Tesseract ─────────────────────────────────────────
+  const runOcr = async (file: File) => {
+    const url = URL.createObjectURL(file);
+    setPreviewUrl(url);
+    setOcrStatus("ocr");
+    setOcrText("");
 
     try {
-      const url = URL.createObjectURL(file);
-      const img = new Image();
-      img.src = url;
-      await new Promise((res) => (img.onload = res));
+      const worker = await createWorker("kor+eng");
+      const { data } = await worker.recognize(url);
+      await worker.terminate();
 
-      const codeReader = new BrowserMultiFormatReader();
-      try {
-        const result = await codeReader.decodeFromImageElement(img);
-        const isbn = result.getText();
-        URL.revokeObjectURL(url);
-        const books = await searchBooksByIsbn(isbn);
-        if (books.length > 0) {
-          setResults(books);
-          setScanStatus("success");
-        } else {
-          const fallback = await searchBooks(isbn);
-          setResults(fallback);
-          setScanStatus(fallback.length > 0 ? "success" : "error");
-        }
-      } catch {
-        // No barcode found
-        URL.revokeObjectURL(url);
-        setScanStatus("error");
-        setResults([]);
-      }
+      // Clean up text: remove excess whitespace, keep meaningful lines
+      const cleaned = data.text
+        .split("\n")
+        .map((l) => l.trim())
+        .filter((l) => l.length > 1)
+        .slice(0, 3) // Take top 3 lines as likely title area
+        .join(" ")
+        .substring(0, 80);
+
+      setOcrText(cleaned);
+      setOcrStatus("done");
     } catch {
-      setScanStatus("error");
-      setResults([]);
+      setOcrStatus("error");
     }
+  };
 
-    setLoading(false);
-    setTimeout(() => setScanStatus("idle"), 2000);
-    if (imageInputRef.current) imageInputRef.current.value = "";
+  const handleImageInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) runOcr(file);
+  };
+
+  const handleOcrSearch = () => {
+    if (ocrText.trim()) {
+      setQuery(ocrText);
+      handleSearch(ocrText);
+    }
   };
 
   return (
@@ -141,27 +102,25 @@ export default function BookSearch() {
             className="input-cute w-full pl-9"
           />
         </div>
-        <button onClick={handleSearch} className="btn-cute" disabled={loading}>
+        <button onClick={() => handleSearch()} className="btn-cute" disabled={loading}>
           {loading ? t("searching", lang) : t("search", lang)}
         </button>
       </div>
 
-      {/* Image / Barcode search buttons */}
+      {/* Camera & Image buttons */}
       <div className="flex gap-2">
-        <button
-          onClick={scanMode ? stopScan : startScan}
-          className={`flex items-center gap-1.5 text-sm font-bold px-3 py-2 rounded-xl border-2 transition-colors flex-1 justify-center ${
-            scanMode
-              ? "bg-destructive/10 border-destructive text-destructive"
-              : "bg-secondary border-primary/20 hover:border-primary text-foreground"
-          }`}
-        >
-          {scanMode ? (
-            <><X className="w-4 h-4" />{t("stopScan", lang)}</>
-          ) : (
-            <><Camera className="w-4 h-4" />{t("scanBarcode", lang)}</>
-          )}
-        </button>
+        <label className="flex items-center gap-1.5 text-sm font-bold px-3 py-2 rounded-xl border-2 border-primary/20 bg-secondary hover:border-primary transition-colors cursor-pointer flex-1 justify-center">
+          <Camera className="w-4 h-4" />
+          {t("scanBarcode", lang)}
+          <input
+            ref={cameraInputRef}
+            type="file"
+            accept="image/*"
+            capture="environment"
+            className="hidden"
+            onChange={handleImageInput}
+          />
+        </label>
 
         <label className="flex items-center gap-1.5 text-sm font-bold px-3 py-2 rounded-xl border-2 border-primary/20 bg-secondary hover:border-primary transition-colors cursor-pointer flex-1 justify-center">
           <ImageUp className="w-4 h-4" />
@@ -171,36 +130,60 @@ export default function BookSearch() {
             type="file"
             accept="image/*"
             className="hidden"
-            onChange={handleImageFile}
+            onChange={handleImageInput}
           />
         </label>
       </div>
-
-      {/* Tip text */}
       <p className="text-xs text-muted-foreground text-center">{t("imageSearchTip", lang)}</p>
 
-      {/* Camera preview */}
-      {scanMode && (
-        <div className="relative rounded-2xl overflow-hidden border-2 border-primary/40 bg-black">
-          <video ref={videoRef} className="w-full max-h-64 object-cover" autoPlay muted playsInline />
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <div className="w-48 h-28 border-2 border-primary rounded-xl opacity-70" />
-          </div>
-          <div className="absolute bottom-2 left-0 right-0 flex justify-center">
-            <span className="bg-background/80 text-foreground text-xs px-3 py-1 rounded-full flex items-center gap-1">
-              <ZapIcon className="w-3 h-3 text-primary" />
-              {t("scanningCamera", lang)}
+      {/* OCR Panel */}
+      {(ocrStatus !== "idle" || previewUrl) && (
+        <div className="rounded-2xl border-2 border-primary/20 bg-card p-4 space-y-3">
+          <div className="flex items-center justify-between">
+            <span className="font-bold text-sm text-foreground">
+              {ocrStatus === "ocr" && (
+                <span className="flex items-center gap-2">
+                  <Loader2 className="w-4 h-4 animate-spin text-primary" />
+                  {t("scanningCamera", lang)}
+                </span>
+              )}
+              {ocrStatus === "done" && "📝 " + t("ocrResult", lang)}
+              {ocrStatus === "error" && "⚠️ " + t("scanError", lang)}
             </span>
+            <button onClick={clearOcr} className="text-muted-foreground hover:text-destructive transition-colors">
+              <X className="w-4 h-4" />
+            </button>
           </div>
-        </div>
-      )}
 
-      {/* Scan status */}
-      {scanStatus === "success" && !scanMode && (
-        <p className="text-center text-sm font-bold text-primary">{t("scanSuccess", lang)}</p>
-      )}
-      {scanStatus === "error" && (
-        <p className="text-center text-sm font-bold text-destructive">{t("scanError", lang)}</p>
+          {previewUrl && (
+            <img
+              src={previewUrl}
+              alt="captured"
+              className="w-full max-h-40 object-contain rounded-xl border border-border"
+            />
+          )}
+
+          {ocrStatus === "done" && (
+            <>
+              <div className="space-y-1">
+                <p className="text-xs text-muted-foreground font-bold">{t("ocrEditHint", lang)}</p>
+                <input
+                  type="text"
+                  value={ocrText}
+                  onChange={(e) => setOcrText(e.target.value)}
+                  className="input-cute w-full"
+                />
+              </div>
+              <button
+                onClick={handleOcrSearch}
+                disabled={!ocrText.trim() || loading}
+                className="btn-cute w-full"
+              >
+                {loading ? t("searching", lang) : t("search", lang)}
+              </button>
+            </>
+          )}
+        </div>
       )}
 
       {/* Search Results */}
@@ -228,7 +211,7 @@ export default function BookSearch() {
         </div>
       )}
 
-      {searched && !loading && results.length === 0 && scanStatus !== "error" && (
+      {searched && !loading && results.length === 0 && (
         <p className="text-center text-muted-foreground py-4">{t("noResults", lang)}</p>
       )}
 
