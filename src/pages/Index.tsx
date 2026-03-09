@@ -28,9 +28,10 @@ const Index = () => {
           <h1 className="text-2xl tracking-tight">
             📚 {t("appTitle", lang)}
           </h1>
-          <div className="flex items-center gap-3 flex-wrap">
+          <div className="flex items-center gap-2 flex-wrap">
             <ThemeSelector />
             <LanguageToggle />
+            <HelpModal />
           </div>
         </div>
       </header>
