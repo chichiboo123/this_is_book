@@ -21,20 +21,12 @@ export default function ExportToolbar({ cardRefs }: ExportToolbarProps) {
   };
 
   const downloadDataUrl = (dataUrl: string, name: string) => {
-    const img = new Image();
-    img.onload = () => {
-      const canvas = document.createElement("canvas");
-      canvas.width = img.width;
-      canvas.height = img.height;
-      const ctx = canvas.getContext("2d")!;
-      ctx.drawImage(img, 0, 0);
-      const webpUrl = canvas.toDataURL("image/webp", 0.9);
-      const a = document.createElement("a");
-      a.href = webpUrl;
-      a.download = `${name}.webp`;
-      a.click();
-    };
-    img.src = dataUrl;
+    const a = document.createElement("a");
+    a.href = dataUrl;
+    a.download = `${name}.png`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
   };
 
   const handleExportImage = async (key: string, ref: React.RefObject<HTMLDivElement>) => {

@@ -69,7 +69,7 @@ const Index = () => {
               <div className="card-activity">
                 <BookCardActivity />
               </div>
-              <div ref={bookCardRef} className="md:sticky md:top-24 h-fit">
+              <div className="md:sticky md:top-24 h-fit">
                 <BookCardPreview />
               </div>
             </section>
@@ -80,7 +80,7 @@ const Index = () => {
               <div className="card-activity">
                 <IntroCardActivity />
               </div>
-              <div ref={introCardRef} className="md:sticky md:top-24 h-fit">
+              <div className="md:sticky md:top-24 h-fit">
                 <IntroCardPreview />
               </div>
             </section>
@@ -91,7 +91,7 @@ const Index = () => {
               <div className="card-activity">
                 <QuestionCardActivity />
               </div>
-              <div ref={questionCardRef} className="md:sticky md:top-24 h-fit">
+              <div className="md:sticky md:top-24 h-fit">
                 <QuestionCardPreview />
               </div>
             </section>
@@ -109,6 +109,16 @@ const Index = () => {
           />
         </section>
       </main>
+
+      {/* 내보내기 전용 숨김 렌더링 — 탭과 무관하게 항상 DOM에 마운트 */}
+      <div
+        aria-hidden="true"
+        style={{ position: "absolute", left: "-9999px", top: 0, width: "420px", pointerEvents: "none", opacity: 0 }}
+      >
+        <div ref={bookCardRef}><BookCardPreview /></div>
+        <div ref={introCardRef}><IntroCardPreview /></div>
+        <div ref={questionCardRef}><QuestionCardPreview /></div>
+      </div>
 
       {/* Footer */}
       <footer className="text-center py-6 text-sm text-muted-foreground">
