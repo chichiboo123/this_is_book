@@ -93,8 +93,8 @@ const translations: Record<string, Record<Lang, string>> = {
   howToUse: { ko: "사용법", en: "How to Use", ja: "使い方", zh: "使用说明" },
   emojiPickerTitle: { ko: "이모지 선택", en: "Select Emoji", ja: "絵文字を選択", zh: "选择表情" },
   emojiCustom: { ko: "직접 입력", en: "Type your own", ja: "直接入力", zh: "手动输入" },
-  scanBarcode: { ko: "📷 사진 촬영", en: "📷 Take Photo", ja: "📷 写真撮影", zh: "📷 拍照" },
-  uploadImageSearch: { ko: "🖼️ 이미지 업로드", en: "🖼️ Upload Image", ja: "🖼️ 画像アップロード", zh: "🖼️ 上传图片" },
+  scanBarcode: { ko: "사진 촬영", en: "Take Photo", ja: "写真撮影", zh: "拍照" },
+  uploadImageSearch: { ko: "이미지 업로드", en: "Upload Image", ja: "画像アップロード", zh: "上传图片" },
   scanningCamera: { ko: "글자 인식 중...", en: "Recognizing text...", ja: "文字認識中...", zh: "识别文字中..." },
   scanSuccess: { ko: "인식 완료!", en: "Text recognized!", ja: "認識完了！", zh: "识别完成！" },
   scanError: { ko: "글자 인식 실패. 다시 시도해주세요.", en: "Recognition failed. Please try again.", ja: "認識失敗。もう一度試してください。", zh: "识别失败，请重试。" },
@@ -102,6 +102,7 @@ const translations: Record<string, Record<Lang, string>> = {
   imageSearchTip: { ko: "책 표지를 촬영하거나 이미지를 업로드해 제목을 자동 인식해요", en: "Take a photo or upload a book cover to auto-detect the title", ja: "本の表紙を撮影してタイトルを自動認識", zh: "拍摄书封面或上传图片自动识别书名" },
   ocrResult: { ko: "인식된 텍스트", en: "Recognized Text", ja: "認識されたテキスト", zh: "识别到的文字" },
   ocrEditHint: { ko: "인식 결과를 수정한 후 검색해보세요", en: "Edit the result then search", ja: "結果を修正して検索", zh: "修改结果后搜索" },
+  captureButton: { ko: "촬영하기", en: "Capture", ja: "撮影する", zh: "拍照" },
 };
 
 export function t(key: string, lang: Lang): string {
