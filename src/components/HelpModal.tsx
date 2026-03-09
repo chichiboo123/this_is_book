@@ -176,7 +176,7 @@ export default function HelpModal() {
         >
           <div
             className="bg-card rounded-t-2xl sm:rounded-2xl shadow-2xl w-full sm:max-w-lg border border-border sm:m-4"
-            style={{ maxHeight: "85vh", display: "flex", flexDirection: "column" }}
+            style={{ maxHeight: "85dvh", display: "flex", flexDirection: "column" }}
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
@@ -195,8 +195,8 @@ export default function HelpModal() {
 
             {/* Content */}
             <div
-              className="p-4 sm:p-5 space-y-3 sm:space-y-4"
-              style={{ overflowY: "auto", flex: "1 1 0%", minHeight: 0 }}
+              className="p-4 sm:p-5 space-y-3 sm:space-y-4 pb-safe"
+              style={{ overflowY: "auto", flex: "1 1 0%", minHeight: 0, paddingBottom: "calc(1.25rem + env(safe-area-inset-bottom))" }}
             >
               {content.map((item, i) => (
                 <div key={i} className="flex gap-3 p-3 rounded-xl bg-secondary/40">
