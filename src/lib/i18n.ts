@@ -93,6 +93,13 @@ const translations: Record<string, Record<Lang, string>> = {
   howToUse: { ko: "사용법", en: "How to Use", ja: "使い方", zh: "使用说明" },
   emojiPickerTitle: { ko: "이모지 선택", en: "Select Emoji", ja: "絵文字を選択", zh: "选择表情" },
   emojiCustom: { ko: "직접 입력", en: "Type your own", ja: "直接入力", zh: "手动输入" },
+  scanBarcode: { ko: "바코드 스캔", en: "Scan Barcode", ja: "バーコードスキャン", zh: "扫描条形码" },
+  uploadImageSearch: { ko: "이미지로 검색", en: "Search by Image", ja: "画像で検索", zh: "图片搜索" },
+  scanningCamera: { ko: "카메라로 스캔 중...", en: "Scanning with camera...", ja: "カメラでスキャン中...", zh: "相机扫描中..." },
+  scanSuccess: { ko: "스캔 완료! 검색 중...", en: "Scanned! Searching...", ja: "スキャン完了！検索中...", zh: "扫描成功！搜索中..." },
+  scanError: { ko: "스캔 실패. 다시 시도해주세요.", en: "Scan failed. Please try again.", ja: "スキャン失敗。もう一度試してください。", zh: "扫描失败，请重试。" },
+  stopScan: { ko: "스캔 중지", en: "Stop Scan", ja: "スキャン停止", zh: "停止扫描" },
+  imageSearchTip: { ko: "책 표지 이미지를 올리거나 바코드를 스캔하세요", en: "Upload a book cover or scan its barcode", ja: "本の表紙をアップロードするかバーコードをスキャン", zh: "上传书封面或扫描条形码" },
 };
 
 export function t(key: string, lang: Lang): string {
