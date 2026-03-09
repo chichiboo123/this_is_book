@@ -1,5 +1,7 @@
 import type { BookInfo } from "./useAppStore";
 
+const API_KEY = "AIzaSyCjfvK2Afrv8Dzmw6Z0RrJHNld6BqYdcoQ";
+
 export async function searchBooksByIsbn(isbn: string): Promise<BookInfo[]> {
   // Clean the ISBN (remove hyphens/spaces)
   const cleaned = isbn.replace(/[-\s]/g, "");
@@ -9,7 +11,7 @@ export async function searchBooksByIsbn(isbn: string): Promise<BookInfo[]> {
 export async function searchBooks(query: string): Promise<BookInfo[]> {
   if (!query.trim()) return [];
   const res = await fetch(
-    `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&maxResults=10&langRestrict=ko`
+    `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&maxResults=10&langRestrict=ko&key=${API_KEY}`
   );
   if (!res.ok) return [];
   const data = await res.json();
