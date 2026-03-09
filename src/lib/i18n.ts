@@ -57,7 +57,7 @@ const translations: Record<string, Record<Lang, string>> = {
     zh: "试着自己回答！",
   },
   addQuestion: { ko: "질문 추가 ➕", en: "Add Question ➕", ja: "質問追加 ➕", zh: "添加问题 ➕" },
-  exportImage: { ko: "이미지 저장", en: "Save Image", ja: "画像保存", zh: "保存图片" },
+  exportImage: { ko: "내보내기", en: "Export", ja: "エクスポート", zh: "导出" },
   copyClipboard: { ko: "클립보드 복사", en: "Copy to Clipboard", ja: "クリップボードにコピー", zh: "复制到剪贴板" },
   exportSelected: { ko: "선택 내보내기", en: "Export Selected", ja: "選択エクスポート", zh: "导出所选" },
   theme: { ko: "테마", en: "Theme", ja: "テーマ", zh: "主题" },
