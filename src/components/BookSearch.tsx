@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useAppStore, type BookInfo } from "@/lib/useAppStore";
 import { t } from "@/lib/i18n";
 import { searchBooks, searchBooksByIsbn } from "@/lib/googleBooks";
@@ -17,7 +17,11 @@ export default function BookSearch() {
   const [ocrText, setOcrText] = useState("");
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
-  const cameraInputRef = useRef<HTMLInputElement>(null);
+  // Camera state
+  const [isCameraOpen, setIsCameraOpen] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const streamRef = useRef<MediaStream | null>(null);
+
   const imageInputRef = useRef<HTMLInputElement>(null);
 
   const handleSearch = async (searchQuery?: string) => {
@@ -41,8 +45,58 @@ export default function BookSearch() {
     setOcrStatus("idle");
     if (previewUrl) URL.revokeObjectURL(previewUrl);
     setPreviewUrl(null);
-    if (cameraInputRef.current) cameraInputRef.current.value = "";
     if (imageInputRef.current) imageInputRef.current.value = "";
+  };
+
+  // ── Camera Handling ───────────────────────────────────────────
+  const startCamera = async () => {
+    clearOcr();
+    setIsCameraOpen(true);
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: "environment" },
+      });
+      streamRef.current = stream;
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+      }
+    } catch (err) {
+      console.error("Camera error:", err);
+      setIsCameraOpen(false);
+      setOcrStatus("error");
+    }
+  };
+
+  const stopCamera = () => {
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach((t) => t.stop());
+      streamRef.current = null;
+    }
+    setIsCameraOpen(false);
+  };
+
+  useEffect(() => {
+    return () => {
+      stopCamera();
+    };
+  }, []);
+
+  const captureImage = () => {
+    if (!videoRef.current) return;
+    const canvas = document.createElement("canvas");
+    canvas.width = videoRef.current.videoWidth;
+    canvas.height = videoRef.current.videoHeight;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    ctx.drawImage(videoRef.current, 0, 0);
+
+    canvas.toBlob((blob) => {
+      if (blob) {
+        const file = new File([blob], "capture.jpg", { type: "image/jpeg" });
+        stopCamera();
+        runOcr(file);
+      }
+    }, "image/jpeg");
   };
 
   // ── OCR with Tesseract ─────────────────────────────────────────
@@ -75,7 +129,10 @@ export default function BookSearch() {
 
   const handleImageInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) runOcr(file);
+    if (file) {
+      stopCamera();
+      runOcr(file);
+    }
   };
 
   const handleOcrSearch = () => {
@@ -109,18 +166,26 @@ export default function BookSearch() {
 
       {/* Camera & Image buttons */}
       <div className="flex gap-2">
-        <label className="flex items-center gap-1.5 text-sm font-bold px-3 py-2 rounded-xl border-2 border-primary/20 bg-secondary hover:border-primary transition-colors cursor-pointer flex-1 justify-center">
-          <Camera className="w-4 h-4" />
-          {t("scanBarcode", lang)}
-          <input
-            ref={cameraInputRef}
-            type="file"
-            accept="image/*"
-            capture="environment"
-            className="hidden"
-            onChange={handleImageInput}
-          />
-        </label>
+        <button
+          onClick={isCameraOpen ? stopCamera : startCamera}
+          className={`flex items-center gap-1.5 text-sm font-bold px-3 py-2 rounded-xl border-2 transition-colors flex-1 justify-center ${
+            isCameraOpen
+              ? "bg-destructive/10 border-destructive text-destructive"
+              : "border-primary/20 bg-secondary hover:border-primary text-foreground"
+          }`}
+        >
+          {isCameraOpen ? (
+            <>
+              <X className="w-4 h-4" />
+              {t("stopScan", lang)}
+            </>
+          ) : (
+            <>
+              <Camera className="w-4 h-4" />
+              {t("scanBarcode", lang)}
+            </>
+          )}
+        </button>
 
         <label className="flex items-center gap-1.5 text-sm font-bold px-3 py-2 rounded-xl border-2 border-primary/20 bg-secondary hover:border-primary transition-colors cursor-pointer flex-1 justify-center">
           <ImageUp className="w-4 h-4" />
@@ -136,8 +201,29 @@ export default function BookSearch() {
       </div>
       <p className="text-xs text-muted-foreground text-center">{t("imageSearchTip", lang)}</p>
 
+      {/* Live Camera View */}
+      {isCameraOpen && (
+        <div className="relative rounded-2xl overflow-hidden border-2 border-primary/40 bg-black flex flex-col items-center">
+          <video
+            ref={videoRef}
+            autoPlay
+            playsInline
+            muted
+            className="w-full max-h-64 object-cover"
+          />
+          <div className="absolute bottom-4 left-0 right-0 flex justify-center">
+            <button
+              onClick={captureImage}
+              className="bg-primary text-primary-foreground font-bold px-6 py-2 rounded-full shadow-lg border-2 border-white/20 active:scale-95 transition-transform"
+            >
+              촬영하기
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* OCR Panel */}
-      {(ocrStatus !== "idle" || previewUrl) && (
+      {!isCameraOpen && (ocrStatus !== "idle" || previewUrl) && (
         <div className="rounded-2xl border-2 border-primary/20 bg-card p-4 space-y-3">
           <div className="flex items-center justify-between">
             <span className="font-bold text-sm text-foreground">
