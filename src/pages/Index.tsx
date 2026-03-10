@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useAppStore } from "@/lib/useAppStore";
 import booksIcon from "@/assets/books-icon.png";
 import { t } from "@/lib/i18n";
@@ -16,8 +17,14 @@ import ExportToolbar from "@/components/ExportToolbar";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
+const SUBTITLE_KEYS = ["appSubtitle", "appSubtitle2"] as const;
+
 const Index = () => {
   const { lang } = useAppStore();
+  // 새로고침/접속마다 두 문구 중 하나를 랜덤 고정 (렌더 중 변경 없음)
+  const [subtitleKey] = useState<string>(
+    () => SUBTITLE_KEYS[Math.floor(Math.random() * SUBTITLE_KEYS.length)]
+  );
 
   return (
     <div className="min-h-screen bg-background pb-12">
@@ -41,7 +48,7 @@ const Index = () => {
       <main className="max-w-4xl mx-auto px-3 sm:px-4 py-4 sm:py-6 space-y-6 sm:space-y-8">
         {/* Subtitle */}
         <p className="text-center text-sm sm:text-lg text-foreground font-grandiflora whitespace-pre-line leading-relaxed">
-          {t("appSubtitle", lang)}
+          {t(subtitleKey, lang)}
         </p>
 
         {/* Book Search */}
