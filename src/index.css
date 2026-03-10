@@ -96,8 +96,8 @@
   }
   .font-grandiflora {
     font-family: "Grandiflora One", cursive;
-    font-weight: 400;
     font-style: normal;
+    -webkit-text-stroke: 0.4px currentColor;
   }
 }
 
