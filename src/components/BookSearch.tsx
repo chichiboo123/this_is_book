@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useAppStore, type BookInfo } from "@/lib/useAppStore";
 import { t } from "@/lib/i18n";
-import { searchBooks, searchBooksByIsbn } from "@/lib/naverBooks";
+import { searchBooks } from "@/lib/naverBooks";
 import { Search, Camera, ImageUp, X, Loader2 } from "lucide-react";
 import { createWorker } from "tesseract.js";
 
@@ -11,6 +11,7 @@ export default function BookSearch() {
   const [results, setResults] = useState<BookInfo[]>([]);
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
+  const [searchError, setSearchError] = useState<string | null>(null);
 
   // OCR state
   const [ocrStatus, setOcrStatus] = useState<"idle" | "ocr" | "done" | "error">("idle");
@@ -29,9 +30,17 @@ export default function BookSearch() {
     if (!q) return;
     setLoading(true);
     setSearched(true);
-    const books = await searchBooks(q);
-    setResults(books);
-    setLoading(false);
+    setSearchError(null);
+    try {
+      const books = await searchBooks(q);
+      setResults(books);
+    } catch (err) {
+      console.error("Search error:", err);
+      setSearchError(err instanceof Error ? err.message : "검색 중 오류가 발생했습니다.");
+      setResults([]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleSelect = (book: BookInfo) => {
@@ -297,7 +306,13 @@ export default function BookSearch() {
         </div>
       )}
 
-      {searched && !loading && results.length === 0 && (
+      {searchError && (
+        <p className="text-center text-destructive text-sm py-3 bg-destructive/10 rounded-xl px-3">
+          ⚠️ {searchError}
+        </p>
+      )}
+
+      {searched && !loading && !searchError && results.length === 0 && (
         <p className="text-center text-muted-foreground py-4">{t("noResults", lang)}</p>
       )}
 
