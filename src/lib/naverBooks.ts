@@ -47,10 +47,19 @@ function mapItemToBookInfo(item: any): BookInfo {
   };
 }
 
+/**
+ * 엔드포인트 분기:
+ *  - 개발(npm run dev): Vite 프록시 /api/naver → openapi.naver.com
+ *  - 프로덕션(Netlify): /.netlify/functions/naver-search (서버리스 함수)
+ */
+const SEARCH_URL = import.meta.env.PROD
+  ? "/.netlify/functions/naver-search"
+  : "/api/naver/v1/search/book.json";
+
 export async function searchBooks(query: string): Promise<BookInfo[]> {
   if (!query.trim()) return [];
   const res = await fetch(
-    `/api/naver/v1/search/book.json?query=${encodeURIComponent(query)}&display=10`
+    `${SEARCH_URL}?query=${encodeURIComponent(query)}&display=10`
   );
   if (!res.ok) {
     const body = await res.text().catch(() => "");

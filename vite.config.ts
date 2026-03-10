@@ -9,7 +9,7 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
 
   return {
-    base: "/this_is_book/",
+    base: "/",
     server: {
       host: "::",
       port: 8080,
