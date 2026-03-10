@@ -15,6 +15,12 @@ const translations: Record<string, Record<Lang, string>> = {
     ja: "私がその名を呼んだとき、\nそれは私のもとへ来て、本になった。",
     zh: "当我呼唤它的名字时，\n它向我走来，成为了一本书。",
   },
+  appSubtitle2: {
+    ko: "넌 나에게 세상에서 단 하나뿐인 사람이 되고,\n난 너에게 둘도 없는 책이 될 테니까.",
+    en: "You'll be the one and only person in the world to me,\nand I'll be a book like no other to you.",
+    ja: "あなたは私にとって世界でただ一人の人になり、\n私はあなたにとって二つとない本になるから。",
+    zh: "你会成为我在这世上唯一的人，\n而我会成为你独一无二的书。",
+  },
   searchPlaceholder: {
     ko: "책 제목이나 저자를 검색해보세요",
     en: "Search by title or author",
