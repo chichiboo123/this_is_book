@@ -1,19 +1,20 @@
+import { useRef } from "react";
+import { createPortal } from "react-dom";
 import { toPng } from "html-to-image";
 import { useAppStore } from "@/lib/useAppStore";
 import { t } from "@/lib/i18n";
 import { toast } from "sonner";
 import { Download, Copy } from "lucide-react";
+import BookCardPreview from "@/components/BookCardPreview";
+import IntroCardPreview from "@/components/IntroCardPreview";
+import QuestionCardPreview from "@/components/QuestionCardPreview";
 
-interface ExportToolbarProps {
-  cardRefs: {
-    bookCard: React.RefObject<HTMLDivElement>;
-    introCard: React.RefObject<HTMLDivElement>;
-    questionCard: React.RefObject<HTMLDivElement>;
-  };
-}
-
-export default function ExportToolbar({ cardRefs }: ExportToolbarProps) {
+export default function ExportToolbar() {
   const { lang } = useAppStore();
+
+  const bookCardRef = useRef<HTMLDivElement>(null);
+  const introCardRef = useRef<HTMLDivElement>(null);
+  const questionCardRef = useRef<HTMLDivElement>(null);
 
   const captureCard = async (ref: React.RefObject<HTMLDivElement>) => {
     if (!ref.current) return null;
@@ -21,20 +22,12 @@ export default function ExportToolbar({ cardRefs }: ExportToolbarProps) {
   };
 
   const downloadDataUrl = (dataUrl: string, name: string) => {
-    const img = new Image();
-    img.onload = () => {
-      const canvas = document.createElement("canvas");
-      canvas.width = img.width;
-      canvas.height = img.height;
-      const ctx = canvas.getContext("2d")!;
-      ctx.drawImage(img, 0, 0);
-      const webpUrl = canvas.toDataURL("image/webp", 0.9);
-      const a = document.createElement("a");
-      a.href = webpUrl;
-      a.download = `${name}.webp`;
-      a.click();
-    };
-    img.src = dataUrl;
+    const a = document.createElement("a");
+    a.href = dataUrl;
+    a.download = `${name}.png`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
   };
 
   const handleExportImage = async (key: string, ref: React.RefObject<HTMLDivElement>) => {
@@ -55,39 +48,54 @@ export default function ExportToolbar({ cardRefs }: ExportToolbarProps) {
   };
 
   const cards: [string, string, React.RefObject<HTMLDivElement>][] = [
-    ["bookCard", t("bookCard", lang), cardRefs.bookCard],
-    ["introCard", t("introCard", lang), cardRefs.introCard],
-    ["questionCard", t("questionCard", lang), cardRefs.questionCard],
+    ["bookCard", t("bookCard", lang), bookCardRef],
+    ["introCard", t("introCard", lang), introCardRef],
+    ["questionCard", t("questionCard", lang), questionCardRef],
   ];
 
   return (
-    <div className="card-activity space-y-4 border-2 border-primary/20">
-      <h3 className="section-title text-lg mb-2 flex items-center gap-2">
-        <Download size={20} />
-        {t("exportSection", lang)}
-      </h3>
+    <>
+      <div className="card-activity space-y-4 border-2 border-primary/20">
+        <h3 className="section-title text-lg mb-2 flex items-center gap-2">
+          <Download size={20} />
+          {t("exportSection", lang)}
+        </h3>
 
-      <div className="grid gap-4 sm:grid-cols-3">
-        {cards.map(([key, label, ref]) => (
-          <div key={key} className="flex flex-col gap-3 p-4 rounded-xl bg-card border-2 border-primary/10 shadow-sm">
-            <span className="text-sm font-bold text-center">{label}</span>
-            <div className="flex gap-2">
-              <button
-                onClick={() => handleExportImage(key, ref)}
-                className="btn-cute flex-1 text-xs py-2 px-2 flex items-center justify-center gap-1"
-              >
-                <Download size={14} /> {t("exportImage", lang)}
-              </button>
-              <button
-                onClick={() => handleCopyClipboard(ref)}
-                className="btn-outline-cute flex-1 text-xs py-2 px-2 flex items-center justify-center gap-1"
-              >
-                <Copy size={14} /> {t("copyClipboard", lang)}
-              </button>
+        <div className="grid gap-4 sm:grid-cols-3">
+          {cards.map(([key, label, ref]) => (
+            <div key={key} className="flex flex-col gap-3 p-4 rounded-xl bg-card border-2 border-primary/10 shadow-sm">
+              <span className="text-sm font-bold text-center">{label}</span>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => handleExportImage(key, ref)}
+                  className="btn-cute flex-1 text-xs py-2 px-2 flex items-center justify-center gap-1"
+                >
+                  <Download size={14} /> {t("exportImage", lang)}
+                </button>
+                <button
+                  onClick={() => handleCopyClipboard(ref)}
+                  className="btn-outline-cute flex-1 text-xs py-2 px-2 flex items-center justify-center gap-1"
+                >
+                  <Copy size={14} /> {t("copyClipboard", lang)}
+                </button>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-    </div>
+
+      {/* 내보내기 전용 숨김 렌더링 — document.body 포털로 항상 마운트, 투명도 없이 화면 밖 고정 */}
+      {createPortal(
+        <div
+          aria-hidden="true"
+          style={{ position: "fixed", top: "-9999px", left: 0, width: "420px", pointerEvents: "none" }}
+        >
+          <div ref={bookCardRef}><BookCardPreview /></div>
+          <div ref={introCardRef}><IntroCardPreview /></div>
+          <div ref={questionCardRef}><QuestionCardPreview /></div>
+        </div>,
+        document.body
+      )}
+    </>
   );
 }

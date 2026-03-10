@@ -171,7 +171,7 @@ export default function HelpModal() {
 
       {open && (
         <div
-          className="fixed inset-0 z-50 flex items-start justify-center pt-[168px] px-4 pb-4 bg-black/50 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex items-start justify-center pt-[168px] px-4 pb-4"
           onClick={() => setOpen(false)}
         >
           <div

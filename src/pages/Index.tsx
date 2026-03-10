@@ -1,4 +1,3 @@
-import { useRef } from "react";
 import { useAppStore } from "@/lib/useAppStore";
 import booksIcon from "@/assets/books-icon.png";
 import { t } from "@/lib/i18n";
@@ -13,13 +12,11 @@ import BookCardPreview from "@/components/BookCardPreview";
 import IntroCardPreview from "@/components/IntroCardPreview";
 import QuestionCardPreview from "@/components/QuestionCardPreview";
 import ExportToolbar from "@/components/ExportToolbar";
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const Index = () => {
   const { lang } = useAppStore();
-  const bookCardRef = useRef<HTMLDivElement>(null!);
-  const introCardRef = useRef<HTMLDivElement>(null!);
-  const questionCardRef = useRef<HTMLDivElement>(null!);
 
   return (
     <div className="min-h-screen bg-background pb-12">
@@ -69,7 +66,7 @@ const Index = () => {
               <div className="card-activity">
                 <BookCardActivity />
               </div>
-              <div ref={bookCardRef} className="md:sticky md:top-24 h-fit">
+              <div className="md:sticky md:top-24 h-fit">
                 <BookCardPreview />
               </div>
             </section>
@@ -80,7 +77,7 @@ const Index = () => {
               <div className="card-activity">
                 <IntroCardActivity />
               </div>
-              <div ref={introCardRef} className="md:sticky md:top-24 h-fit">
+              <div className="md:sticky md:top-24 h-fit">
                 <IntroCardPreview />
               </div>
             </section>
@@ -91,7 +88,7 @@ const Index = () => {
               <div className="card-activity">
                 <QuestionCardActivity />
               </div>
-              <div ref={questionCardRef} className="md:sticky md:top-24 h-fit">
+              <div className="md:sticky md:top-24 h-fit">
                 <QuestionCardPreview />
               </div>
             </section>
@@ -100,13 +97,7 @@ const Index = () => {
 
         {/* Export */}
         <section>
-          <ExportToolbar
-            cardRefs={{
-              bookCard: bookCardRef,
-              introCard: introCardRef,
-              questionCard: questionCardRef,
-            }}
-          />
+          <ExportToolbar />
         </section>
       </main>
 
