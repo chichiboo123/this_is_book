@@ -1,4 +1,3 @@
-import { useRef } from "react";
 import { useAppStore } from "@/lib/useAppStore";
 import booksIcon from "@/assets/books-icon.png";
 import { t } from "@/lib/i18n";
@@ -13,13 +12,11 @@ import BookCardPreview from "@/components/BookCardPreview";
 import IntroCardPreview from "@/components/IntroCardPreview";
 import QuestionCardPreview from "@/components/QuestionCardPreview";
 import ExportToolbar from "@/components/ExportToolbar";
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const Index = () => {
   const { lang } = useAppStore();
-  const bookCardRef = useRef<HTMLDivElement>(null!);
-  const introCardRef = useRef<HTMLDivElement>(null!);
-  const questionCardRef = useRef<HTMLDivElement>(null!);
 
   return (
     <div className="min-h-screen bg-background pb-12">
@@ -100,25 +97,9 @@ const Index = () => {
 
         {/* Export */}
         <section>
-          <ExportToolbar
-            cardRefs={{
-              bookCard: bookCardRef,
-              introCard: introCardRef,
-              questionCard: questionCardRef,
-            }}
-          />
+          <ExportToolbar />
         </section>
       </main>
-
-      {/* 내보내기 전용 숨김 렌더링 — 탭과 무관하게 항상 DOM에 마운트 */}
-      <div
-        aria-hidden="true"
-        style={{ position: "absolute", left: "-9999px", top: 0, width: "420px", pointerEvents: "none", opacity: 0 }}
-      >
-        <div ref={bookCardRef}><BookCardPreview /></div>
-        <div ref={introCardRef}><IntroCardPreview /></div>
-        <div ref={questionCardRef}><QuestionCardPreview /></div>
-      </div>
 
       {/* Footer */}
       <footer className="text-center py-6 text-sm text-muted-foreground">
