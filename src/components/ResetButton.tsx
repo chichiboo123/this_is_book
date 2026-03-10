@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { createPortal } from "react-dom";
 import { RotateCcw } from "lucide-react";
 import { useAppStore } from "@/lib/useAppStore";
 
@@ -21,13 +22,16 @@ export default function ResetButton() {
         <RotateCcw size={15} className="text-muted-foreground" />
       </button>
 
-      {open && (
-        <div
-          className="fixed inset-0 z-[200] flex items-center justify-center p-4"
-          onClick={() => setOpen(false)}
-        >
+      {open && createPortal(
+        <>
+          {/* 반투명 배경 오버레이 */}
           <div
-            className="bg-card rounded-2xl shadow-2xl w-full max-w-sm border border-border p-6 space-y-4"
+            className="fixed inset-0 z-[9998] bg-black/40"
+            onClick={() => setOpen(false)}
+          />
+          {/* 모달 — top/left 50% + translate로 뷰포트 정중앙 강제 고정 */}
+          <div
+            className="fixed z-[9999] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[calc(100vw-2rem)] max-w-sm bg-card rounded-2xl shadow-2xl border border-border p-6 space-y-4"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="text-center space-y-2">
@@ -53,7 +57,8 @@ export default function ResetButton() {
               </button>
             </div>
           </div>
-        </div>
+        </>,
+        document.body
       )}
     </>
   );
