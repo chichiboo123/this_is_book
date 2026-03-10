@@ -52,7 +52,10 @@ export async function searchBooks(query: string): Promise<BookInfo[]> {
   const res = await fetch(
     `/api/naver/v1/search/book.json?query=${encodeURIComponent(query)}&display=10`
   );
-  if (!res.ok) return [];
+  if (!res.ok) {
+    const body = await res.text().catch(() => "");
+    throw new Error(`API 오류 (${res.status}): ${body || res.statusText}`);
+  }
   const data = await res.json();
   if (!data.items) return [];
   return data.items.map(mapItemToBookInfo);
