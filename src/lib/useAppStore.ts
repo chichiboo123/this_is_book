@@ -18,6 +18,7 @@ export interface BookInfo {
   isbn13?: string;
   isbn10?: string;
   language?: string;
+  link?: string;
 }
 
 export interface BookCardData {
@@ -54,6 +55,7 @@ interface AppState {
   lang: Lang;
   theme: "blue" | "green" | "yellow" | "pink";
   selectedBook: BookInfo | null;
+  customTitle: string;
   bookCard: BookCardData;
   introText: string;
   introImageUrl: string | null;
@@ -61,6 +63,7 @@ interface AppState {
   setLang: (l: Lang) => void;
   setTheme: (t: "blue" | "green" | "yellow" | "pink") => void;
   setSelectedBook: (b: BookInfo | null) => void;
+  setCustomTitle: (title: string) => void;
   setBookCard: (data: Partial<BookCardData>) => void;
   setIntroText: (t: string) => void;
   setIntroImageUrl: (url: string | null) => void;
@@ -75,6 +78,7 @@ export const useAppStore = create<AppState>()(
       lang: "ko",
       theme: "blue",
       selectedBook: null,
+      customTitle: "",
       bookCard: { ...initialBookCard },
       introText: "",
       introImageUrl: null,
@@ -85,6 +89,7 @@ export const useAppStore = create<AppState>()(
         set({ theme });
       },
       setSelectedBook: (selectedBook) => set({ selectedBook }),
+      setCustomTitle: (customTitle) => set({ customTitle }),
       setBookCard: (data) =>
         set((s) => ({ bookCard: { ...s.bookCard, ...data } })),
       setIntroText: (introText) => set({ introText }),
@@ -101,6 +106,7 @@ export const useAppStore = create<AppState>()(
         document.documentElement.setAttribute("data-theme", "blue");
         set({
           selectedBook: null,
+          customTitle: "",
           bookCard: { ...initialBookCard },
           introText: "",
           introImageUrl: null,
@@ -121,6 +127,7 @@ export const useAppStore = create<AppState>()(
         lang: state.lang,
         theme: state.theme,
         selectedBook: state.selectedBook,
+        customTitle: state.customTitle,
         bookCard: state.bookCard,
         introText: state.introText,
         introImageUrl: state.introImageUrl,

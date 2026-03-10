@@ -2,7 +2,7 @@ import { useAppStore } from "@/lib/useAppStore";
 import { t } from "@/lib/i18n";
 
 export default function QuestionCardActivity() {
-  const { lang, questions, setQuestions, addQuestion, selectedBook } = useAppStore();
+  const { lang, questions, setQuestions, addQuestion, selectedBook, customTitle, setCustomTitle } = useAppStore();
 
   const updateQ = (id: string, field: "question" | "answer", value: string) => {
     setQuestions(questions.map((q) => (q.id === id ? { ...q, [field]: value } : q)));
@@ -12,9 +12,16 @@ export default function QuestionCardActivity() {
     <div className="space-y-4">
       <h2 className="section-title">{t("questionCardTitle", lang)}</h2>
       {selectedBook && (
-        <p className="text-sm text-muted-foreground">
-          📖 {selectedBook.title} — {selectedBook.authors?.join(", ")}
-        </p>
+        <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+          <span className="shrink-0">📖</span>
+          <input
+            className="bg-transparent border-b border-dashed border-muted-foreground/40 focus:border-primary focus:outline-none flex-1 min-w-0 text-sm text-muted-foreground px-0.5"
+            value={customTitle}
+            onChange={(e) => setCustomTitle(e.target.value)}
+            title="책 제목을 직접 수정할 수 있어요"
+          />
+          <span className="shrink-0 text-xs">— {selectedBook.authors?.join(", ")}</span>
+        </div>
       )}
 
       <div className="space-y-4">

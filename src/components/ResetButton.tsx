@@ -23,7 +23,7 @@ export default function ResetButton() {
 
       {open && (
         <div
-          className="fixed inset-0 z-[200] flex items-end justify-center p-4 pb-16"
+          className="fixed inset-0 z-[200] flex items-center justify-center p-4"
           onClick={() => setOpen(false)}
         >
           <div

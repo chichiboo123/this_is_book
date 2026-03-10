@@ -2,14 +2,14 @@ import { useAppStore } from "@/lib/useAppStore";
 import { t } from "@/lib/i18n";
 
 export default function QuestionCardPreview() {
-  const { questions, selectedBook, lang } = useAppStore();
+  const { questions, selectedBook, customTitle, lang } = useAppStore();
 
   return (
     <div className="rounded-2xl p-5 bg-gradient-to-br from-accent/10 to-primary/10 border-2 border-primary/20 space-y-3">
       <h3 className="font-title text-lg text-center">❓ {t("questionCardTitle", lang)}</h3>
       {selectedBook && (
         <p className="text-xs text-muted-foreground text-center">
-          📖 {selectedBook.title}
+          📖 {customTitle || selectedBook.title}
         </p>
       )}
       <div className="space-y-3">

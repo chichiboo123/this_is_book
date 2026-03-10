@@ -44,6 +44,7 @@ function mapItemToBookInfo(item: any): BookInfo {
     isbn,
     isbn13,
     isbn10,
+    link: item.link || undefined,
   };
 }
 
@@ -59,7 +60,7 @@ const SEARCH_URL = import.meta.env.PROD
 export async function searchBooks(query: string): Promise<BookInfo[]> {
   if (!query.trim()) return [];
   const res = await fetch(
-    `${SEARCH_URL}?query=${encodeURIComponent(query)}&display=10`
+    `${SEARCH_URL}?query=${encodeURIComponent(query)}&display=100`
   );
   if (!res.ok) {
     const body = await res.text().catch(() => "");

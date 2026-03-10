@@ -3,7 +3,7 @@ import { useAppStore } from "@/lib/useAppStore";
 import { t } from "@/lib/i18n";
 
 export default function IntroCardActivity() {
-  const { lang, introText, setIntroText, introImageUrl, setIntroImageUrl, selectedBook } = useAppStore();
+  const { lang, introText, setIntroText, introImageUrl, setIntroImageUrl, selectedBook, customTitle, setCustomTitle } = useAppStore();
   const fileRef = useRef<HTMLInputElement>(null);
 
   const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -19,9 +19,16 @@ export default function IntroCardActivity() {
     <div className="space-y-4">
       <h2 className="section-title">{t("introCardTitle", lang)}</h2>
       {selectedBook && (
-        <p className="text-sm text-muted-foreground">
-          📖 {selectedBook.title} — {selectedBook.authors?.join(", ")}
-        </p>
+        <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+          <span className="shrink-0">📖</span>
+          <input
+            className="bg-transparent border-b border-dashed border-muted-foreground/40 focus:border-primary focus:outline-none flex-1 min-w-0 text-sm text-muted-foreground px-0.5"
+            value={customTitle}
+            onChange={(e) => setCustomTitle(e.target.value)}
+            title="책 제목을 직접 수정할 수 있어요"
+          />
+          <span className="shrink-0 text-xs">— {selectedBook.authors?.join(", ")}</span>
+        </div>
       )}
       <p className="text-sm text-foreground">{t("introText", lang)}</p>
       <textarea
