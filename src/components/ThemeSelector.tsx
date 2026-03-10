@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 import { useAppStore } from "@/lib/useAppStore";
 import { t } from "@/lib/i18n";
-import { Download, Upload } from "lucide-react";
+import { Download, Upload, Save } from "lucide-react";
 
 const themes = [
   { id: "blue" as const, emoji: "💙" },
@@ -61,6 +61,7 @@ export default function ThemeSelector() {
     if (fileRef.current) fileRef.current.value = "";
   };
 
+  const [saveOpen, setSaveOpen] = useState(false);
   const currentTheme = themes.find((th) => th.id === theme) || themes[0];
 
   return (
@@ -93,12 +94,40 @@ export default function ThemeSelector() {
         )}
       </div>
 
-      <button onClick={exportData} title={t("downloadJson", lang)} className="rounded-full w-9 h-9 flex items-center justify-center bg-secondary hover:bg-secondary/80 transition-colors border border-border">
-        <Download size={16} className="text-muted-foreground" />
-      </button>
-      <button onClick={() => fileRef.current?.click()} title={t("uploadJson", lang)} className="rounded-full w-9 h-9 flex items-center justify-center bg-secondary hover:bg-secondary/80 transition-colors border border-border">
-        <Upload size={16} className="text-muted-foreground" />
-      </button>
+      {/* 저장/불러오기 통합 드롭다운 */}
+      <div className="relative">
+        <button
+          onClick={() => setSaveOpen((o) => !o)}
+          title={lang === "ko" ? "데이터 저장/불러오기" : "Save / Restore Data"}
+          className="rounded-full w-9 h-9 flex items-center justify-center bg-secondary hover:bg-secondary/80 transition-colors border border-border"
+        >
+          <Save size={16} className="text-muted-foreground" />
+        </button>
+
+        {saveOpen && (
+          <>
+            {/* 투명 오버레이 — 외부 클릭 시 닫기 */}
+            <div className="fixed inset-0 z-[90]" onClick={() => setSaveOpen(false)} />
+            <div className="absolute right-0 top-full mt-2 bg-card rounded-xl shadow-xl border border-border z-[100] overflow-hidden min-w-[10rem] animate-in fade-in zoom-in-95 duration-150">
+              <button
+                onClick={() => { exportData(); setSaveOpen(false); }}
+                className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm hover:bg-secondary transition-colors text-left"
+              >
+                <Download size={14} className="text-muted-foreground shrink-0" />
+                {t("downloadJson", lang)}
+              </button>
+              <div className="border-t border-border" />
+              <button
+                onClick={() => { fileRef.current?.click(); setSaveOpen(false); }}
+                className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm hover:bg-secondary transition-colors text-left"
+              >
+                <Upload size={14} className="text-muted-foreground shrink-0" />
+                {t("uploadJson", lang)}
+              </button>
+            </div>
+          </>
+        )}
+      </div>
       <input type="file" ref={fileRef} accept=".json" onChange={importData} className="hidden" />
     </div>
   );

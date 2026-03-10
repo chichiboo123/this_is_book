@@ -61,22 +61,24 @@ export default function ExportToolbar() {
           {t("exportSection", lang)}
         </h3>
 
-        <div className="grid gap-4 sm:grid-cols-3">
+        <div className="flex flex-col gap-2">
           {cards.map(([key, label, ref]) => (
-            <div key={key} className="flex flex-col gap-3 p-4 rounded-xl bg-card border-2 border-primary/10 shadow-sm">
-              <span className="text-sm font-bold text-center">{label}</span>
+            <div key={key} className="flex items-center justify-between px-4 py-3 rounded-xl bg-card border-2 border-primary/10 shadow-sm">
+              <span className="text-sm font-bold">{label}</span>
               <div className="flex gap-2">
                 <button
                   onClick={() => handleExportImage(key, ref)}
-                  className="btn-cute flex-1 text-xs py-2 px-2 flex items-center justify-center gap-1"
+                  title={t("exportImage", lang)}
+                  className="w-9 h-9 rounded-full bg-primary/10 hover:bg-primary/20 flex items-center justify-center transition-colors"
                 >
-                  <Download size={14} /> {t("exportImage", lang)}
+                  <Download size={16} className="text-primary" />
                 </button>
                 <button
                   onClick={() => handleCopyClipboard(ref)}
-                  className="btn-outline-cute flex-1 text-xs py-2 px-2 flex items-center justify-center gap-1"
+                  title={t("copyClipboard", lang)}
+                  className="w-9 h-9 rounded-full bg-secondary hover:bg-secondary/80 flex items-center justify-center transition-colors border border-border"
                 >
-                  <Copy size={14} /> {t("copyClipboard", lang)}
+                  <Copy size={16} className="text-muted-foreground" />
                 </button>
               </div>
             </div>
