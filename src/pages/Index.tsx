@@ -40,7 +40,7 @@ const Index = () => {
 
       <main className="max-w-4xl mx-auto px-3 sm:px-4 py-4 sm:py-6 space-y-6 sm:space-y-8">
         {/* Subtitle */}
-        <p className="text-center text-sm sm:text-lg text-muted-foreground font-grandiflora whitespace-pre-line leading-relaxed">
+        <p className="text-center text-sm sm:text-lg text-foreground font-grandiflora whitespace-pre-line leading-relaxed">
           {t("appSubtitle", lang)}
         </p>
 
