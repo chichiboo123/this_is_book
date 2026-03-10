@@ -4,6 +4,7 @@ import { t } from "@/lib/i18n";
 import LanguageToggle from "@/components/LanguageToggle";
 import ThemeSelector from "@/components/ThemeSelector";
 import HelpModal from "@/components/HelpModal";
+import ResetButton from "@/components/ResetButton";
 import BookSearch from "@/components/BookSearch";
 import BookCardActivity from "@/components/BookCardActivity";
 import IntroCardActivity from "@/components/IntroCardActivity";
@@ -30,6 +31,7 @@ const Index = () => {
           </a>
           <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
             <ThemeSelector />
+            <ResetButton />
             <LanguageToggle />
             <HelpModal />
           </div>
@@ -38,7 +40,7 @@ const Index = () => {
 
       <main className="max-w-4xl mx-auto px-3 sm:px-4 py-4 sm:py-6 space-y-6 sm:space-y-8">
         {/* Subtitle */}
-        <p className="text-center text-sm sm:text-lg text-muted-foreground font-bold whitespace-pre-line leading-relaxed">
+        <p className="text-center text-sm sm:text-lg text-muted-foreground font-grandiflora whitespace-pre-line leading-relaxed">
           {t("appSubtitle", lang)}
         </p>
 

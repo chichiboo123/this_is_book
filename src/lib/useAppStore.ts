@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { persist, createJSONStorage } from "zustand/middleware";
 import type { Lang } from "./i18n";
 
 export interface BookInfo {
@@ -37,6 +38,18 @@ export interface QuestionItem {
   answer: string;
 }
 
+const initialBookCard: BookCardData = {
+  charName: "",
+  charLikes: "",
+  charDislikes: "",
+  charLook: "",
+  charPhrase: "",
+  charColor: "#A8D8EA",
+  charEmoji: "",
+  drawingDataUrl: null,
+  uploadedImageUrl: null,
+};
+
 interface AppState {
   lang: Lang;
   theme: "blue" | "green" | "yellow" | "pink";
@@ -53,42 +66,66 @@ interface AppState {
   setIntroImageUrl: (url: string | null) => void;
   setQuestions: (q: QuestionItem[]) => void;
   addQuestion: () => void;
+  reset: () => void;
 }
 
-export const useAppStore = create<AppState>((set) => ({
-  lang: "ko",
-  theme: "blue",
-  selectedBook: null,
-  bookCard: {
-    charName: "",
-    charLikes: "",
-    charDislikes: "",
-    charLook: "",
-    charPhrase: "",
-    charColor: "#A8D8EA",
-    charEmoji: "",
-    drawingDataUrl: null,
-    uploadedImageUrl: null,
-  },
-  introText: "",
-  introImageUrl: null,
-  questions: [{ id: "1", question: "", answer: "" }],
-  setLang: (lang) => set({ lang }),
-  setTheme: (theme) => {
-    document.documentElement.setAttribute("data-theme", theme);
-    set({ theme });
-  },
-  setSelectedBook: (selectedBook) => set({ selectedBook }),
-  setBookCard: (data) =>
-    set((s) => ({ bookCard: { ...s.bookCard, ...data } })),
-  setIntroText: (introText) => set({ introText }),
-  setIntroImageUrl: (introImageUrl) => set({ introImageUrl }),
-  setQuestions: (questions) => set({ questions }),
-  addQuestion: () =>
-    set((s) => ({
-      questions: [
-        ...s.questions,
-        { id: Date.now().toString(), question: "", answer: "" },
-      ],
-    })),
-}));
+export const useAppStore = create<AppState>()(
+  persist(
+    (set) => ({
+      lang: "ko",
+      theme: "blue",
+      selectedBook: null,
+      bookCard: { ...initialBookCard },
+      introText: "",
+      introImageUrl: null,
+      questions: [{ id: "1", question: "", answer: "" }],
+      setLang: (lang) => set({ lang }),
+      setTheme: (theme) => {
+        document.documentElement.setAttribute("data-theme", theme);
+        set({ theme });
+      },
+      setSelectedBook: (selectedBook) => set({ selectedBook }),
+      setBookCard: (data) =>
+        set((s) => ({ bookCard: { ...s.bookCard, ...data } })),
+      setIntroText: (introText) => set({ introText }),
+      setIntroImageUrl: (introImageUrl) => set({ introImageUrl }),
+      setQuestions: (questions) => set({ questions }),
+      addQuestion: () =>
+        set((s) => ({
+          questions: [
+            ...s.questions,
+            { id: Date.now().toString(), question: "", answer: "" },
+          ],
+        })),
+      reset: () => {
+        document.documentElement.setAttribute("data-theme", "blue");
+        set({
+          selectedBook: null,
+          bookCard: { ...initialBookCard },
+          introText: "",
+          introImageUrl: null,
+          questions: [{ id: "1", question: "", answer: "" }],
+          theme: "blue",
+        });
+      },
+    }),
+    {
+      name: "this-is-book-storage",
+      storage: createJSONStorage(() => localStorage),
+      onRehydrateStorage: () => (state) => {
+        if (state?.theme) {
+          document.documentElement.setAttribute("data-theme", state.theme);
+        }
+      },
+      partialize: (state) => ({
+        lang: state.lang,
+        theme: state.theme,
+        selectedBook: state.selectedBook,
+        bookCard: state.bookCard,
+        introText: state.introText,
+        introImageUrl: state.introImageUrl,
+        questions: state.questions,
+      }),
+    }
+  )
+);
