@@ -19,7 +19,7 @@ export const handler = async (event: NetlifyEvent): Promise<NetlifyResponse> => 
   };
 
   const query = event.queryStringParameters?.query ?? "";
-  const display = event.queryStringParameters?.display ?? "10";
+  const display = event.queryStringParameters?.display ?? "100";
 
   if (!query.trim()) {
     return {

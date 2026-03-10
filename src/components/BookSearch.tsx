@@ -2,13 +2,14 @@ import { useState, useRef, useEffect } from "react";
 import { useAppStore, type BookInfo } from "@/lib/useAppStore";
 import { t } from "@/lib/i18n";
 import { searchBooks } from "@/lib/naverBooks";
-import { Search, Camera, ImageUp, X, Loader2 } from "lucide-react";
+import { Search, Camera, ImageUp, X, Loader2, ChevronDown, ChevronUp } from "lucide-react";
 import { createWorker } from "tesseract.js";
 
 export default function BookSearch() {
-  const { lang, setSelectedBook, selectedBook } = useAppStore();
+  const { lang, setSelectedBook, selectedBook, setCustomTitle } = useAppStore();
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<BookInfo[]>([]);
+  const [resultsOpen, setResultsOpen] = useState(true);
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
   const [searchError, setSearchError] = useState<string | null>(null);
@@ -34,6 +35,7 @@ export default function BookSearch() {
     try {
       const books = await searchBooks(q);
       setResults(books);
+      setResultsOpen(true);
     } catch (err) {
       console.error("Search error:", err);
       setSearchError(err instanceof Error ? err.message : "검색 중 오류가 발생했습니다.");
@@ -45,6 +47,7 @@ export default function BookSearch() {
 
   const handleSelect = (book: BookInfo) => {
     setSelectedBook(book);
+    setCustomTitle(book.title);
     setResults([]);
     setSearched(false);
   };
@@ -283,26 +286,37 @@ export default function BookSearch() {
 
       {/* Search Results */}
       {results.length > 0 && (
-        <div className="grid gap-3 max-h-80 overflow-y-auto rounded-xl border-2 border-primary/20 p-3 bg-card">
-          {results.map((book, i) => (
-            <button
-              key={i}
-              onClick={() => handleSelect(book)}
-              className="flex gap-3 items-start text-left p-3 rounded-xl hover:bg-secondary transition-colors"
-            >
-              {book.imageLinks?.thumbnail && (
-                <img
-                  src={book.imageLinks.thumbnail}
-                  alt={book.title}
-                  className="w-12 h-16 rounded-md object-cover flex-shrink-0"
-                />
-              )}
-              <div className="min-w-0">
-                <p className="font-bold text-sm text-foreground truncate">{book.title}</p>
-                <p className="text-xs text-muted-foreground">{book.authors?.join(", ")}</p>
-              </div>
-            </button>
-          ))}
+        <div className="rounded-xl border-2 border-primary/20 bg-card overflow-hidden">
+          <button
+            onClick={() => setResultsOpen((o) => !o)}
+            className="w-full flex items-center justify-between px-4 py-2.5 text-sm font-bold text-foreground hover:bg-secondary/50 transition-colors"
+          >
+            <span>검색 결과 {results.length}건</span>
+            {resultsOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+          </button>
+          {resultsOpen && (
+            <div className="grid gap-3 max-h-80 overflow-y-auto p-3 border-t border-border">
+              {results.map((book, i) => (
+                <button
+                  key={i}
+                  onClick={() => handleSelect(book)}
+                  className="flex gap-3 items-start text-left p-3 rounded-xl hover:bg-secondary transition-colors"
+                >
+                  {book.imageLinks?.thumbnail && (
+                    <img
+                      src={book.imageLinks.thumbnail}
+                      alt={book.title}
+                      className="w-12 h-16 rounded-md object-cover flex-shrink-0"
+                    />
+                  )}
+                  <div className="min-w-0">
+                    <p className="font-bold text-sm text-foreground truncate">{book.title}</p>
+                    <p className="text-xs text-muted-foreground">{book.authors?.join(", ")}</p>
+                  </div>
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       )}
 
@@ -325,6 +339,7 @@ export default function BookSearch() {
 function SelectedBookInfo({ book }: { book: BookInfo }) {
   const { lang } = useAppStore();
 
+  const displayIsbn = book.isbn13 ?? book.isbn10 ?? undefined;
   const infoRows: [string, string | undefined][] = [
     [t("title", lang), book.title],
     [lang === "ko" ? "부제" : "Subtitle", book.subtitle],
@@ -334,9 +349,7 @@ function SelectedBookInfo({ book }: { book: BookInfo }) {
     [t("pages", lang), book.pageCount?.toString()],
     [lang === "ko" ? "출판 형태" : "Print Type", book.printType],
     [t("categories", lang), book.categories?.join(", ")],
-    [t("isbn", lang), book.isbn],
-    ["ISBN-13", book.isbn13],
-    ["ISBN-10", book.isbn10],
+    ["ISBN", displayIsbn],
     [t("language", lang), book.language],
   ];
 
@@ -368,6 +381,16 @@ function SelectedBookInfo({ book }: { book: BookInfo }) {
           {book.description || (lang === "ko" ? "설명 정보가 없습니다." : "No description available.")}
         </p>
       </div>
+      {book.link && (
+        <a
+          href={book.link}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1.5 text-sm font-bold text-primary hover:underline"
+        >
+          🔍 {lang === "ko" ? "네이버 도서에서 보기" : "View on Naver Books"}
+        </a>
+      )}
     </div>
   );
 }

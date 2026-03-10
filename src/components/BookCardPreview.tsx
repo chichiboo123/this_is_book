@@ -2,7 +2,7 @@ import { useAppStore } from "@/lib/useAppStore";
 import { t } from "@/lib/i18n";
 
 export default function BookCardPreview() {
-  const { bookCard, selectedBook, lang } = useAppStore();
+  const { bookCard, selectedBook, customTitle, lang } = useAppStore();
 
   return (
     <div
@@ -17,7 +17,7 @@ export default function BookCardPreview() {
         <h3 className="font-title text-xl mt-1">{bookCard.charName || "..."}</h3>
         {selectedBook && (
           <p className="text-xs text-muted-foreground mt-0.5">
-            📖 {selectedBook.title}
+            📖 {customTitle || selectedBook.title}
           </p>
         )}
       </div>
