@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useAppStore, type BookInfo } from "@/lib/useAppStore";
 import { t } from "@/lib/i18n";
-import { searchBooks, searchBooksByIsbn, fetchBookById } from "@/lib/googleBooks";
+import { searchBooks, searchBooksByIsbn } from "@/lib/naverBooks";
 import { Search, Camera, ImageUp, X, Loader2 } from "lucide-react";
 import { createWorker } from "tesseract.js";
 
@@ -34,13 +34,8 @@ export default function BookSearch() {
     setLoading(false);
   };
 
-  const handleSelect = async (book: BookInfo) => {
-    if (!book.description && book.id) {
-      const detailedBook = await fetchBookById(book.id);
-      setSelectedBook(detailedBook ?? book);
-    } else {
-      setSelectedBook(book);
-    }
+  const handleSelect = (book: BookInfo) => {
+    setSelectedBook(book);
     setResults([]);
     setSearched(false);
   };
