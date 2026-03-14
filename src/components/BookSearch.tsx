@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { useAppStore, type BookInfo } from "@/lib/useAppStore";
 import { t } from "@/lib/i18n";
 import { searchBooks } from "@/lib/naverBooks";
@@ -6,7 +7,7 @@ import { Search, Camera, ImageUp, X, Loader2, ChevronDown, ChevronUp } from "luc
 import { createWorker } from "tesseract.js";
 
 export default function BookSearch() {
-  const { lang, setSelectedBook, selectedBook, setCustomTitle } = useAppStore();
+  const { lang, setSelectedBook, selectedBook, setCustomTitle, clearContent } = useAppStore();
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<BookInfo[]>([]);
   const [resultsOpen, setResultsOpen] = useState(true);
@@ -52,13 +53,30 @@ export default function BookSearch() {
     setSearched(false);
   };
 
-  const handleClearSearch = () => {
+  const [confirmClearOpen, setConfirmClearOpen] = useState(false);
+
+  const executeClear = () => {
     setQuery("");
     setResults([]);
     setSearched(false);
     setSearchError(null);
-    setSelectedBook(null);
-    setCustomTitle("");
+    clearContent(); // 선택된 책 + 카드 내용 전부 초기화
+    setConfirmClearOpen(false);
+  };
+
+  const handleClearSearch = () => {
+    const { bookCard, introText, introImageUrl, questions } = useAppStore.getState();
+    const hasContent = !!(
+      bookCard.charName || bookCard.charLikes || bookCard.charDislikes ||
+      bookCard.charLook || bookCard.charPhrase || bookCard.drawingDataUrl ||
+      bookCard.uploadedImageUrl || introText || introImageUrl ||
+      questions.some((q) => q.question || q.answer)
+    );
+    if (hasContent) {
+      setConfirmClearOpen(true);
+    } else {
+      executeClear();
+    }
   };
 
   const clearOcr = () => {
@@ -353,6 +371,45 @@ export default function BookSearch() {
 
       {/* Selected Book Info */}
       {selectedBook && <SelectedBookInfo book={selectedBook} />}
+
+      {/* 초기화 확인 모달 */}
+      {confirmClearOpen && createPortal(
+        <>
+          <div className="fixed inset-0 z-[9998] bg-black/40" onClick={() => setConfirmClearOpen(false)} />
+          <div className="fixed z-[9999] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[calc(100vw-2rem)] max-w-sm bg-card rounded-2xl shadow-2xl border border-border p-6 space-y-4">
+            <div className="text-center space-y-2">
+              <p className="text-3xl">🗑️</p>
+              <h2 className="text-lg font-bold">
+                {lang === "ko" ? "검색 및 내용 초기화" : lang === "ja" ? "検索とコンテンツをクリア" : lang === "zh" ? "清除搜索和内容" : "Clear Search & Content"}
+              </h2>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                {lang === "ko"
+                  ? "작성 중인 카드 내용이 모두 삭제됩니다.\n이 작업은 되돌릴 수 없습니다."
+                  : lang === "ja"
+                  ? "作成中のカード内容がすべて削除されます。\n元に戻すことはできません。"
+                  : lang === "zh"
+                  ? "所有卡片内容将被删除，\n此操作无法撤销。"
+                  : "All card content will be deleted.\nThis action cannot be undone."}
+              </p>
+            </div>
+            <div className="flex gap-3 pt-1">
+              <button
+                onClick={() => setConfirmClearOpen(false)}
+                className="flex-1 py-2.5 rounded-xl bg-secondary hover:bg-secondary/80 text-sm font-bold transition-colors"
+              >
+                {lang === "ko" ? "취소" : lang === "ja" ? "キャンセル" : lang === "zh" ? "取消" : "Cancel"}
+              </button>
+              <button
+                onClick={executeClear}
+                className="flex-1 py-2.5 rounded-xl bg-destructive hover:bg-destructive/90 text-destructive-foreground text-sm font-bold transition-colors"
+              >
+                {lang === "ko" ? "초기화" : lang === "ja" ? "クリア" : lang === "zh" ? "清除" : "Clear"}
+              </button>
+            </div>
+          </div>
+        </>,
+        document.body
+      )}
     </div>
   );
 }

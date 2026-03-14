@@ -22,6 +22,16 @@ export default function BookCardPreview() {
         )}
       </div>
 
+      {bookCard.showBookCover && selectedBook?.imageLinks?.thumbnail && (
+        <div className="flex justify-center">
+          <img
+            src={selectedBook.imageLinks.thumbnail}
+            alt="book cover"
+            className="w-24 h-34 object-cover rounded-xl shadow-md"
+          />
+        </div>
+      )}
+
       {(bookCard.uploadedImageUrl || bookCard.drawingDataUrl) && (
         <div className="flex justify-center">
           <img
