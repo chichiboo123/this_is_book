@@ -16,9 +16,50 @@ export default function ExportToolbar() {
   const introCardRef = useRef<HTMLDivElement>(null);
   const questionCardRef = useRef<HTMLDivElement>(null);
 
+  // 환경별 이미지 프록시 엔드포인트
+  const IMAGE_PROXY = import.meta.env.PROD
+    ? "/.netlify/functions/image-proxy"
+    : "/api/image-proxy";
+
+  /** 외부 URL 이미지를 프록시를 통해 data URL로 변환 */
+  const toDataUrl = async (src: string): Promise<string> => {
+    const res = await fetch(`${IMAGE_PROXY}?url=${encodeURIComponent(src)}`);
+    const blob = await res.blob();
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  };
+
   const captureCard = async (ref: React.RefObject<HTMLDivElement>) => {
     if (!ref.current) return null;
-    return toPng(ref.current, { pixelRatio: 2, backgroundColor: "#ffffff" });
+
+    // CORS 차단 방지: 외부 HTTP(S) URL img를 data URL로 일시 교체 후 캡처
+    const imgs = Array.from(
+      ref.current.querySelectorAll<HTMLImageElement>("img")
+    ).filter((img) => /^https?:\/\//.test(img.getAttribute("src") || ""));
+
+    const origSrcs = imgs.map((img) => img.getAttribute("src") || "");
+
+    await Promise.all(
+      imgs.map(async (img, i) => {
+        try {
+          const dataUrl = await toDataUrl(origSrcs[i]);
+          img.setAttribute("src", dataUrl);
+        } catch {
+          // 프록시 실패 시 원본 유지 (이미지 없이 내보내기)
+        }
+      })
+    );
+
+    const result = await toPng(ref.current, { pixelRatio: 2, backgroundColor: "#ffffff" });
+
+    // 원본 src 복원
+    imgs.forEach((img, i) => img.setAttribute("src", origSrcs[i]));
+
+    return result;
   };
 
   const downloadDataUrl = (dataUrl: string, name: string) => {
