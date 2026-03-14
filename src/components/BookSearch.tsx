@@ -52,6 +52,15 @@ export default function BookSearch() {
     setSearched(false);
   };
 
+  const handleClearSearch = () => {
+    setQuery("");
+    setResults([]);
+    setSearched(false);
+    setSearchError(null);
+    setSelectedBook(null);
+    setCustomTitle("");
+  };
+
   const clearOcr = () => {
     setOcrText("");
     setOcrStatus("idle");
@@ -156,7 +165,19 @@ export default function BookSearch() {
 
   return (
     <div className="space-y-4">
-      <h2 className="section-title">{t("bookInfo", lang)}</h2>
+      <div className="flex items-center justify-between">
+        <h2 className="section-title">{t("bookInfo", lang)}</h2>
+        {(searched || results.length > 0 || !!selectedBook) && (
+          <button
+            onClick={handleClearSearch}
+            className="flex items-center gap-1 text-xs text-muted-foreground hover:text-destructive transition-colors"
+            title="검색 초기화"
+          >
+            <X className="w-3 h-3" />
+            {lang === "ko" ? "초기화" : lang === "ja" ? "クリア" : lang === "zh" ? "清除" : "Clear"}
+          </button>
+        )}
+      </div>
 
       {/* Search bar */}
       <div className="flex gap-2">

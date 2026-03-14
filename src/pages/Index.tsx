@@ -111,15 +111,28 @@ const Index = () => {
       </main>
 
       {/* Footer */}
-      <footer className="text-center py-6 text-sm text-muted-foreground">
-        <a
-          href="https://litt.ly/chichiboo"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="hover:text-foreground transition-colors"
-        >
-          {t("footer", lang)}
-        </a>
+      <footer className="text-center py-6 space-y-1.5 text-sm text-muted-foreground">
+        <div>
+          <a
+            href="https://litt.ly/chichiboo"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-foreground transition-colors"
+          >
+            {t("footer", lang)}
+          </a>
+        </div>
+        <p className="text-xs opacity-60">
+          책 검색 데이터 제공:{" "}
+          <a
+            href="https://developers.naver.com/docs/serviceapi/search/book/book.md"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-foreground transition-colors underline underline-offset-2"
+          >
+            NAVER Search API
+          </a>
+        </p>
       </footer>
     </div>
   );
