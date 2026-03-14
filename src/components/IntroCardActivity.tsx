@@ -3,7 +3,7 @@ import { useAppStore } from "@/lib/useAppStore";
 import { t } from "@/lib/i18n";
 
 export default function IntroCardActivity() {
-  const { lang, introText, setIntroText, introImageUrl, setIntroImageUrl, selectedBook, customTitle, setCustomTitle } = useAppStore();
+  const { lang, introText, setIntroText, introImageUrl, setIntroImageUrl, selectedBook, customTitle, setCustomTitle, showIntroBookCover, setShowIntroBookCover } = useAppStore();
   const fileRef = useRef<HTMLInputElement>(null);
 
   const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,6 +30,34 @@ export default function IntroCardActivity() {
           <span className="shrink-0 text-xs">— {selectedBook.authors?.join(", ")}</span>
         </div>
       )}
+      {/* 책 표지 포함 여부 */}
+      {selectedBook?.imageLinks?.thumbnail && (
+        <label className="flex items-center gap-2.5 cursor-pointer select-none">
+          <div
+            onClick={() => setShowIntroBookCover(!showIntroBookCover)}
+            className={`w-10 h-6 rounded-full transition-colors relative flex-shrink-0 ${
+              showIntroBookCover ? "bg-primary" : "bg-secondary border border-border"
+            }`}
+          >
+            <span
+              className={`absolute top-0.5 w-5 h-5 rounded-full bg-white shadow-sm transition-transform ${
+                showIntroBookCover ? "translate-x-4" : "translate-x-0.5"
+              }`}
+            />
+          </div>
+          <span className="text-xs font-bold text-muted-foreground">
+            {lang === "ko" ? "책 표지 이미지 포함" : lang === "ja" ? "表紙画像を含む" : lang === "zh" ? "包含书封面" : "Show book cover"}
+          </span>
+          {showIntroBookCover && (
+            <img
+              src={selectedBook.imageLinks.thumbnail}
+              alt="cover"
+              className="w-8 h-11 object-cover rounded shadow-sm ml-auto"
+            />
+          )}
+        </label>
+      )}
+
       <p className="text-sm text-foreground">{t("introText", lang)}</p>
       <textarea
         className="textarea-cute w-full min-h-[160px]"

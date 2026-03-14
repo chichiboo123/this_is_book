@@ -69,6 +69,10 @@ interface AppState {
   setBookCard: (data: Partial<BookCardData>) => void;
   setIntroText: (t: string) => void;
   setIntroImageUrl: (url: string | null) => void;
+  showIntroBookCover: boolean;
+  showQuestionBookCover: boolean;
+  setShowIntroBookCover: (v: boolean) => void;
+  setShowQuestionBookCover: (v: boolean) => void;
   setQuestions: (q: QuestionItem[]) => void;
   addQuestion: () => void;
   clearContent: () => void;
@@ -85,6 +89,8 @@ export const useAppStore = create<AppState>()(
       bookCard: { ...initialBookCard },
       introText: "",
       introImageUrl: null,
+      showIntroBookCover: false,
+      showQuestionBookCover: false,
       questions: [{ id: "1", question: "", answer: "" }],
       setLang: (lang) => set({ lang }),
       setTheme: (theme) => {
@@ -93,6 +99,8 @@ export const useAppStore = create<AppState>()(
       },
       setSelectedBook: (selectedBook) => set({ selectedBook }),
       setCustomTitle: (customTitle) => set({ customTitle }),
+      setShowIntroBookCover: (showIntroBookCover) => set({ showIntroBookCover }),
+      setShowQuestionBookCover: (showQuestionBookCover) => set({ showQuestionBookCover }),
       setBookCard: (data) =>
         set((s) => ({ bookCard: { ...s.bookCard, ...data } })),
       setIntroText: (introText) => set({ introText }),
@@ -112,6 +120,8 @@ export const useAppStore = create<AppState>()(
           bookCard: { ...initialBookCard },
           introText: "",
           introImageUrl: null,
+          showIntroBookCover: false,
+          showQuestionBookCover: false,
           questions: [{ id: "1", question: "", answer: "" }],
         }),
       reset: () => {
@@ -122,6 +132,8 @@ export const useAppStore = create<AppState>()(
           bookCard: { ...initialBookCard },
           introText: "",
           introImageUrl: null,
+          showIntroBookCover: false,
+          showQuestionBookCover: false,
           questions: [{ id: "1", question: "", answer: "" }],
           theme: "blue",
         });
@@ -143,6 +155,8 @@ export const useAppStore = create<AppState>()(
         bookCard: state.bookCard,
         introText: state.introText,
         introImageUrl: state.introImageUrl,
+        showIntroBookCover: state.showIntroBookCover,
+        showQuestionBookCover: state.showQuestionBookCover,
         questions: state.questions,
       }),
     }
