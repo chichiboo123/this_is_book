@@ -2,7 +2,7 @@ import { useAppStore } from "@/lib/useAppStore";
 import { t } from "@/lib/i18n";
 
 export default function IntroCardPreview() {
-  const { introText, introImageUrl, selectedBook, customTitle, lang } = useAppStore();
+  const { introText, introImageUrl, selectedBook, customTitle, showIntroBookCover, lang } = useAppStore();
 
   return (
     <div className="rounded-2xl p-5 bg-gradient-to-br from-primary/10 to-accent/10 border-2 border-primary/20 space-y-3">
@@ -11,6 +11,15 @@ export default function IntroCardPreview() {
         <p className="text-xs text-muted-foreground text-center">
           📖 {customTitle || selectedBook.title} — {selectedBook.authors?.join(", ")}
         </p>
+      )}
+      {showIntroBookCover && selectedBook?.imageLinks?.thumbnail && (
+        <div className="flex justify-center">
+          <img
+            src={selectedBook.imageLinks.thumbnail}
+            alt="book cover"
+            className="w-24 object-cover rounded-xl shadow-md"
+          />
+        </div>
       )}
       {introImageUrl && (
         <img
