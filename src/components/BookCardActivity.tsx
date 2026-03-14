@@ -53,6 +53,34 @@ export default function BookCardActivity() {
         </div>
       )}
 
+      {/* 책 표지 포함 여부 */}
+      {selectedBook?.imageLinks?.thumbnail && (
+        <label className="flex items-center gap-2.5 cursor-pointer select-none">
+          <div
+            onClick={() => setBookCard({ showBookCover: !bookCard.showBookCover })}
+            className={`w-10 h-6 rounded-full transition-colors relative flex-shrink-0 ${
+              bookCard.showBookCover ? "bg-primary" : "bg-secondary border border-border"
+            }`}
+          >
+            <span
+              className={`absolute top-0.5 w-5 h-5 rounded-full bg-white shadow-sm transition-transform ${
+                bookCard.showBookCover ? "translate-x-4" : "translate-x-0.5"
+              }`}
+            />
+          </div>
+          <span className="text-xs font-bold text-muted-foreground">
+            {lang === "ko" ? "책 표지 이미지 포함" : lang === "ja" ? "表紙画像を含む" : lang === "zh" ? "包含书封面" : "Show book cover"}
+          </span>
+          {bookCard.showBookCover && (
+            <img
+              src={selectedBook.imageLinks.thumbnail}
+              alt="cover"
+              className="w-8 h-11 object-cover rounded shadow-sm ml-auto"
+            />
+          )}
+        </label>
+      )}
+
       <div className="grid gap-3">
         <div>
           <label className="text-xs font-bold text-muted-foreground">{t("charName", lang)}</label>

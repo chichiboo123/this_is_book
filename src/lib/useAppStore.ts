@@ -31,6 +31,7 @@ export interface BookCardData {
   charEmoji: string;
   drawingDataUrl: string | null;
   uploadedImageUrl: string | null;
+  showBookCover: boolean;
 }
 
 export interface QuestionItem {
@@ -49,6 +50,7 @@ const initialBookCard: BookCardData = {
   charEmoji: "",
   drawingDataUrl: null,
   uploadedImageUrl: null,
+  showBookCover: false,
 };
 
 interface AppState {
@@ -69,6 +71,7 @@ interface AppState {
   setIntroImageUrl: (url: string | null) => void;
   setQuestions: (q: QuestionItem[]) => void;
   addQuestion: () => void;
+  clearContent: () => void;
   reset: () => void;
 }
 
@@ -102,6 +105,15 @@ export const useAppStore = create<AppState>()(
             { id: Date.now().toString(), question: "", answer: "" },
           ],
         })),
+      clearContent: () =>
+        set({
+          selectedBook: null,
+          customTitle: "",
+          bookCard: { ...initialBookCard },
+          introText: "",
+          introImageUrl: null,
+          questions: [{ id: "1", question: "", answer: "" }],
+        }),
       reset: () => {
         document.documentElement.setAttribute("data-theme", "blue");
         set({
