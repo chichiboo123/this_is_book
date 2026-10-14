@@ -43,15 +43,14 @@ export default defineConfig(({ mode }) => {
         overlay: false,
       },
       proxy: {
-        // /api/naver/* → https://openapi.naver.com/*
+        // /api/kakao-book-search → 카카오 책 검색 (Netlify Function과 동일 역할)
         // API 키는 Node.js 프록시 서버에서만 추가되며 브라우저에 노출되지 않음
-        "/api/naver": {
-          target: "https://openapi.naver.com",
+        "/api/kakao-book-search": {
+          target: "https://dapi.kakao.com",
           changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/api\/naver/, ""),
+          rewrite: (path) => path.replace(/^\/api\/kakao-book-search/, "/v3/search/book"),
           headers: {
-            "X-Naver-Client-Id": env.NAVER_CLIENT_ID || "",
-            "X-Naver-Client-Secret": env.NAVER_CLIENT_SECRET || "",
+            Authorization: `KakaoAK ${env.KAKAO_REST_API_KEY || ""}`,
           },
         },
       },

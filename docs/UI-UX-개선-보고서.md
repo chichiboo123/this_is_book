@@ -8,7 +8,7 @@
 |---|---|
 | 화면 | 단일 페이지(`pages/Index.tsx`): 헤더 → 인용 문구 → 책 검색 → 카드 탭 3종(작성 + 미리보기) → 내보내기 → 푸터 |
 | 상태 | Zustand + localStorage 자동 저장(`lib/useAppStore.ts`) |
-| 데이터 | 네이버 책 검색 API(Netlify Function 프록시), 표지 이미지 프록시, Tesseract OCR |
+| 데이터 | 네이버 책 검색 API(Netlify Function 프록시) — **2026-07-31 서비스 종료**, 표지 이미지 프록시, Tesseract OCR |
 | 내보내기 | 화면 밖에 숨겨 둔 카드 복제본을 `html-to-image`로 PNG 변환 |
 | 헤더 도구 | 테마(하트) · 데이터 저장/복원 · 초기화 · 언어 · 도움말 — 아이콘 5개 |
 
@@ -26,6 +26,7 @@
 | B5 | 이미지 저장·복사에 오류 처리 없음. Safari·Firefox에서 복사 실패 시 무반응 | 신뢰도 저하 |
 | B6 | 미리보기 카드가 화면보다 길면 sticky 때문에 하단이 보이지 않음 | 확인 불가 |
 | B7 | 책 카드 표지에 존재하지 않는 클래스(`h-34`) 사용 | 표지 비율 깨짐 |
+| B8 | **네이버 책 검색 API가 2026-07-31 종료**되어 검색 시 `SE05 Invalid search api`(404) 오류 | 앱 핵심 기능 중단 |
 
 ### 2-2. 사용성(UX)
 | # | 문제 |
@@ -99,14 +100,20 @@
 
 ### ⑧ 디자인 시스템 · 접근성 (치수쌤 웹앱 표준 적용)
 - **Pretendard GOV → Pretendard** 글꼴, **Google Material Icons(Outlined)** 아이콘으로 통일
-- 표준 푸터(`auto_stories` 아이콘 + “Created by. 교육뮤지컬 꿈꾸는 치수쌤”) + NAVER API 출처
+- 표준 푸터(`auto_stories` 아이콘 + “Created by. 교육뮤지컬 꿈꾸는 치수쌤”) + 책 검색 데이터 출처(Kakao · Google Books)
 - 글자용 진한 테마색 토큰(`--primary-strong`) 추가로 대비 4.5:1 이상 확보 — V1 해결
 - 모달·메뉴를 Radix(AlertDialog/Dialog/DropdownMenu/Switch/Checkbox)로 교체: Esc 닫기, 포커스 이동, 키보드 조작 지원
 - 전 화면 포커스 링, `prefers-reduced-motion` 대응, 이미지·버튼 라벨(aria) 정리
 - 하드코딩된 한국어 문구를 모두 `i18n.ts`로 이동(4개 언어), `<html lang>` 자동 변경
 - 테마 이름 부여(하늘·새싹·햇살·꽃잎)와 색 견본 메뉴
 
-### ⑨ 안정성
+### ⑨ 책 검색 API 교체 — B8 해결
+- 1순위 **카카오 책 검색**(Daum 검색 API): 서버리스 함수가 REST API 키를 붙여 중계(키 비노출)
+- 2순위 **Google Books**: 카카오 키 미설정·오류·한도 초과 시 브라우저에서 자동 대체 검색(키 불필요)
+- 검색 결과에 자료 출처 표시, 푸터 데이터 출처 갱신
+- 배포 설정: Netlify 환경변수 `KAKAO_REST_API_KEY` 등록 필요(미등록 시에도 Google Books로 동작)
+
+### ⑩ 안정성
 - 업로드 이미지를 **최대 1024px로 자동 축소** 후 저장 — B3 해결
 - 저장 공간 초과 시 앱이 멈추지 않고 안내 메시지 표시
 - 작업 파일 저장/불러오기에 모든 항목 포함, 이전 버전 파일·저장 데이터 자동 호환 — B2 해결
@@ -117,7 +124,8 @@
 ![개선 전/후 — 모바일](images/mobile-before-after.png)
 
 ## 4. 검증
-- `npm run build`, `tsc --noEmit`, `npm run lint`(오류 0), `npm test`(7개 통과)
+- `npm run build`, `tsc --noEmit`, `npm run lint`(오류 0), `npm test`(12개 통과)
+- 책 검색: 카카오 정상 응답 / 카카오 실패 → Google Books 대체 두 경로를 Playwright로 확인
 - Playwright로 데스크톱(1280px)·모바일(390px)에서 **검색 → 책 선택 → 책/소개/질문 카드 작성 → 그림 그리기 → 카드 3종 PNG 저장 → 새로고침 후 복원**까지 자동 확인
 
 ## 5. 다음 단계 제안 (이번 범위 밖)

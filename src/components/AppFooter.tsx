@@ -19,12 +19,21 @@ export default function AppFooter() {
       <p className="text-xs text-[#767676]">
         {t("dataSource", lang)}:{" "}
         <a
-          href="https://developers.naver.com/docs/serviceapi/search/book/book.md"
+          href="https://developers.kakao.com/docs/latest/ko/daum-search/dev-guide#search-book"
           target="_blank"
           rel="noopener noreferrer"
           className="underline underline-offset-2 hover:text-[#006DD2] transition-colors"
         >
-          NAVER Search API
+          Kakao
+        </a>
+        {" · "}
+        <a
+          href="https://developers.google.com/books"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline underline-offset-2 hover:text-[#006DD2] transition-colors"
+        >
+          Google Books
         </a>
       </p>
     </footer>

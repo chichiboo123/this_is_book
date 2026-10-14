@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useAppStore, type BookInfo } from "@/lib/useAppStore";
 import { t } from "@/lib/i18n";
-import { searchBooks } from "@/lib/naverBooks";
+import { searchBooks, PROVIDER_LABEL, type BookProvider } from "@/lib/bookSearch";
 import { hasAnyContent } from "@/lib/progress";
 import { BOOK_SEARCH_INPUT_ID } from "@/lib/nav";
 import Icon from "@/components/Icon";
@@ -11,6 +11,7 @@ export default function BookSearch() {
   const { lang, setSelectedBook, selectedBook, setCustomTitle, clearContent } = useAppStore();
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<BookInfo[]>([]);
+  const [provider, setProvider] = useState<BookProvider>("kakao");
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
   const [searchError, setSearchError] = useState(false);
@@ -47,7 +48,9 @@ export default function BookSearch() {
     setSearched(true);
     setSearchError(false);
     try {
-      setResults(await searchBooks(q));
+      const res = await searchBooks(q);
+      setResults(res.books);
+      setProvider(res.provider);
     } catch (err) {
       console.error("Search error:", err);
       setSearchError(true);
@@ -337,8 +340,11 @@ export default function BookSearch() {
 
           {!loading && results.length > 0 && (
             <div className="rounded-2xl border border-border overflow-hidden">
-              <p className="px-4 py-2.5 text-sm font-bold bg-secondary/50 border-b border-border" role="status">
+              <p className="flex items-center justify-between gap-2 px-4 py-2.5 text-sm font-bold bg-secondary/50 border-b border-border" role="status">
                 {t("resultsCount", lang, { n: results.length })}
+                <span className="text-xs font-medium text-muted-foreground">
+                  {t("searchSource", lang, { name: PROVIDER_LABEL[provider] })}
+                </span>
               </p>
               <ul className="max-h-[22rem] overflow-y-auto divide-y divide-border">
                 {results.map((book, i) => (
@@ -518,7 +524,7 @@ function SelectedBookSummary({ book, onChange }: { book: BookInfo; onChange: () 
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1 text-sm font-bold text-primary-strong hover:underline"
             >
-              {t("viewOnNaver", lang)}
+              {t("viewOnSource", lang)}
               <Icon name="open_in_new" size={16} />
             </a>
           )}
