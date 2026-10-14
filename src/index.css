@@ -8,40 +8,43 @@
 
 @layer base {
   :root {
-    --font-body: "Pretendard", -apple-system, BlinkMacSystemFont, sans-serif;
-    --font-title: "Black Han Sans", sans-serif;
+    --font-body: "Pretendard GOV", "Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --font-title: "Black Han Sans", "Pretendard GOV", "Pretendard", sans-serif;
 
     /* Default: Pastel Blue */
     --theme-hue: 210;
     --theme-sat: 70%;
 
-    --background: 210 30% 97%;
-    --foreground: 220 20% 20%;
+    --background: var(--theme-hue) 35% 97%;
+    --foreground: 220 20% 16%;
 
     --card: 0 0% 100%;
-    --card-foreground: 220 20% 20%;
+    --card-foreground: 220 20% 16%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 220 20% 20%;
+    --popover-foreground: 220 20% 16%;
 
-    --primary: var(--theme-hue) var(--theme-sat) 72%;
-    --primary-foreground: 220 30% 15%;
+    /* 파스텔 포인트색 — 배경/버튼 채움용 (위에 올라가는 글자는 진한 색) */
+    --primary: var(--theme-hue) var(--theme-sat) 74%;
+    --primary-foreground: 220 30% 14%;
+    /* 흰 배경 위 글자·아이콘용 진한 테마색 (명암비 4.5:1 이상) */
+    --primary-strong: var(--theme-hue) 60% 34%;
 
-    --secondary: var(--theme-hue) 40% 90%;
-    --secondary-foreground: 220 20% 25%;
+    --secondary: var(--theme-hue) 45% 93%;
+    --secondary-foreground: 220 20% 22%;
 
-    --muted: var(--theme-hue) 20% 94%;
-    --muted-foreground: 220 10% 50%;
+    --muted: var(--theme-hue) 25% 95%;
+    --muted-foreground: 220 9% 42%;
 
-    --accent: var(--theme-hue) 60% 82%;
-    --accent-foreground: 220 25% 18%;
+    --accent: var(--theme-hue) 60% 86%;
+    --accent-foreground: 220 25% 16%;
 
-    --destructive: 0 70% 60%;
+    --destructive: 0 68% 48%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: var(--theme-hue) 30% 88%;
-    --input: var(--theme-hue) 25% 90%;
-    --ring: var(--theme-hue) var(--theme-sat) 72%;
+    --border: var(--theme-hue) 28% 88%;
+    --input: var(--theme-hue) 25% 85%;
+    --ring: var(--theme-hue) 60% 50%;
 
     --radius: 1rem;
 
@@ -54,14 +57,14 @@
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
 
-    --pastel-blue: 210 70% 72%;
-    --pastel-green: 150 50% 72%;
-    --pastel-yellow: 45 80% 78%;
-    --pastel-pink: 340 60% 78%;
+    /* 치수쌤 파스텔 팔레트 */
+    --color-pastel-blue: #bfd9f2;
+    --color-pastel-green: #c8edd9;
+    --color-pastel-yellow: #fff3b0;
+    --color-pastel-pink: #ffd6e0;
 
-    --gradient-card: linear-gradient(135deg, hsl(var(--primary) / 0.1), hsl(var(--accent) / 0.15));
-    --shadow-card: 0 4px 20px -4px hsl(var(--primary) / 0.2);
-    --shadow-hover: 0 8px 30px -4px hsl(var(--primary) / 0.3);
+    --shadow-soft: 0 1px 2px hsl(var(--theme-hue) 30% 40% / 0.06), 0 8px 24px -12px hsl(var(--theme-hue) 40% 40% / 0.18);
+    --shadow-lift: 0 2px 4px hsl(var(--theme-hue) 30% 40% / 0.08), 0 16px 40px -16px hsl(var(--theme-hue) 40% 35% / 0.3);
   }
 
   /* Theme variants */
@@ -75,11 +78,11 @@
   }
   [data-theme="yellow"] {
     --theme-hue: 45;
-    --theme-sat: 80%;
+    --theme-sat: 85%;
   }
   [data-theme="pink"] {
     --theme-hue: 340;
-    --theme-sat: 60%;
+    --theme-sat: 70%;
   }
 }
 
@@ -87,50 +90,119 @@
   * {
     @apply border-border;
   }
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: 5rem;
+  }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
     font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.6;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+    background-image:
+      radial-gradient(60rem 30rem at 50% -10rem, hsl(var(--primary) / 0.28), transparent 70%),
+      radial-gradient(40rem 24rem at 100% 40%, hsl(var(--accent) / 0.25), transparent 70%);
+    background-attachment: fixed;
   }
   h1, h2, h3, .font-title {
     font-family: var(--font-title);
+    font-weight: 400;
   }
   .font-grandiflora {
-    font-family: "Grandiflora One", cursive;
+    font-family: "Grandiflora One", var(--font-body);
     font-style: normal;
-    -webkit-text-stroke: 0.4px currentColor;
+    -webkit-text-stroke: 0.3px currentColor;
+  }
+  :focus-visible {
+    outline: 3px solid hsl(var(--ring));
+    outline-offset: 2px;
+  }
+  .material-icons-outlined {
+    font-size: 1.25em;
+    line-height: 1;
+    vertical-align: middle;
+    user-select: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }
 
 @layer components {
+  /* 작업 영역 패널 */
   .card-activity {
-    @apply bg-card rounded-2xl p-4 sm:p-5 border-2 border-primary/20;
-    box-shadow: var(--shadow-card);
-    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    @apply bg-card rounded-3xl p-4 sm:p-6 border border-border;
+    box-shadow: var(--shadow-soft);
   }
-  .card-activity:hover {
-    box-shadow: var(--shadow-hover);
-    transform: translateY(-2px);
-  }
+
   .btn-cute {
-    @apply rounded-full px-5 py-2.5 font-bold text-sm transition-all duration-200;
-    @apply bg-primary text-primary-foreground hover:opacity-90 active:scale-95;
+    @apply inline-flex items-center justify-center gap-1.5 rounded-full px-5 h-11 font-bold text-[15px] transition-all duration-200;
+    @apply bg-primary text-primary-foreground hover:brightness-95 active:scale-[0.97];
+    @apply disabled:opacity-50 disabled:pointer-events-none;
+    box-shadow: 0 6px 16px -8px hsl(var(--primary-strong) / 0.6);
   }
   .btn-outline-cute {
-    @apply rounded-full px-5 py-2.5 font-bold text-sm transition-all duration-200;
-    @apply border-2 border-primary text-primary-foreground bg-transparent hover:bg-primary/10 active:scale-95;
+    @apply inline-flex items-center justify-center gap-1.5 rounded-full px-5 h-11 font-bold text-[15px] transition-all duration-200;
+    @apply border-2 border-primary/50 text-foreground bg-card hover:bg-primary/10 hover:border-primary active:scale-[0.97];
+    @apply disabled:opacity-50 disabled:pointer-events-none;
   }
+  .btn-ghost-cute {
+    @apply inline-flex items-center justify-center gap-1.5 rounded-full px-3 h-9 font-bold text-sm transition-colors;
+    @apply text-muted-foreground hover:text-foreground hover:bg-secondary;
+  }
+  .icon-btn {
+    @apply inline-flex items-center justify-center w-10 h-10 rounded-full transition-colors;
+    @apply bg-card/70 border border-border text-foreground/80 hover:bg-secondary hover:text-foreground;
+  }
+
+  /* 입력 — iOS 확대 방지를 위해 16px 유지 */
   .input-cute {
-    @apply rounded-xl border-2 border-primary/30 bg-card px-4 py-2.5 text-sm;
-    @apply focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none;
-    @apply placeholder:text-muted-foreground;
+    @apply rounded-xl border-2 border-input bg-card px-4 h-11 text-base transition-colors;
+    @apply hover:border-primary/70 focus:border-primary focus:ring-4 focus:ring-primary/25 focus:outline-none;
+    @apply placeholder:text-muted-foreground/80;
   }
   .textarea-cute {
-    @apply rounded-xl border-2 border-primary/30 bg-card px-4 py-3 text-sm resize-none;
-    @apply focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none;
-    @apply placeholder:text-muted-foreground;
+    @apply rounded-xl border-2 border-input bg-card px-4 py-3 text-base leading-relaxed resize-y transition-colors;
+    @apply hover:border-primary/70 focus:border-primary focus:ring-4 focus:ring-primary/25 focus:outline-none;
+    @apply placeholder:text-muted-foreground/80;
   }
+  .field-label {
+    @apply flex items-center gap-1 text-sm font-bold text-foreground/80 mb-1.5;
+  }
+
   .section-title {
     font-family: var(--font-title);
-    @apply text-2xl text-foreground tracking-wide;
+    @apply text-[22px] leading-tight text-foreground;
+  }
+  .step-badge {
+    @apply inline-flex items-center justify-center w-7 h-7 rounded-full text-sm font-bold bg-primary text-primary-foreground shrink-0;
+    font-family: var(--font-body);
+  }
+  .chip {
+    @apply inline-flex items-center gap-1 rounded-full px-3 py-1.5 text-sm font-medium border border-border bg-card;
+    @apply hover:border-primary hover:bg-primary/10 transition-colors;
+  }
+
+  /* 세그먼트 컨트롤 (모바일 작성/미리보기, 사진/그림 전환) */
+  .segmented {
+    @apply grid gap-1 p-1 rounded-full bg-secondary;
+  }
+  .segmented > button {
+    @apply inline-flex items-center justify-center gap-1.5 h-9 rounded-full text-sm font-bold text-muted-foreground transition-all;
+  }
+  .segmented > button[aria-pressed="true"] {
+    @apply bg-card text-foreground shadow-sm;
+  }
+}
+
+@layer utilities {
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
   }
 }

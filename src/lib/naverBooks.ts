@@ -29,12 +29,23 @@ function formatPubDate(pubdate: string): string {
   return `${pubdate.slice(0, 4)}-${pubdate.slice(4, 6)}-${pubdate.slice(6, 8)}`;
 }
 
-function mapItemToBookInfo(item: any): BookInfo {
-  const { isbn, isbn10, isbn13 } = parseIsbn(item.isbn);
+interface NaverBookItem {
+  title?: string;
+  author?: string;
+  publisher?: string;
+  pubdate?: string;
+  description?: string;
+  image?: string;
+  isbn?: string;
+  link?: string;
+}
+
+function mapItemToBookInfo(item: NaverBookItem): BookInfo {
+  const { isbn, isbn10, isbn13 } = parseIsbn(item.isbn ?? "");
   return {
     id: isbn13 || isbn10 || undefined,
     title: stripHtml(item.title || ""),
-    authors: parseAuthors(item.author),
+    authors: parseAuthors(item.author ?? ""),
     publisher: item.publisher || undefined,
     publishedDate: item.pubdate ? formatPubDate(item.pubdate) : undefined,
     description: stripHtml(item.description || ""),

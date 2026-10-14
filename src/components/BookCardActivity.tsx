@@ -1,220 +1,221 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useAppStore } from "@/lib/useAppStore";
 import { t } from "@/lib/i18n";
 import DrawingCanvas from "./DrawingCanvas";
+import BookContextBar from "./BookContextBar";
+import ImageAttach from "./ImageAttach";
+import Icon from "./Icon";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 const EMOJI_LIST = [
-  "😀", "😃", "😄", "😁", "😆", "😅", "😂", "🤣", "🥲", "☺️",
-  "😊", "😇", "🙂", "🙃", "😉", "😌", "😍", "🥰", "😘", "😗",
-  "😎", "🤓", "🧐", "🥳", "🤩", "🤪", "🥺", "🥹", "🥸", "😤",
-  "🐶", "🐱", "🐭", "🐹", "🐰", "🦊", "🐻", "🐼", "🐻‍❄️", "🐨",
-  "🐯", "🦁", "🐮", "🐷", "🐸", "🐵", "🐧", "🐦", "🐤", "🦉",
-  "📚", "📕", "📘", "📗", "📙", "📖", "📝", "✏️", "🎨", "🎭",
-  "⭐", "🌟", "💫", "✨", "🌈", "🌸", "🌺", "🍀", "🔥", "💎",
+  "😀", "😄", "😆", "😂", "🥲", "😊", "😇", "🙂", "😉", "😍",
+  "🥰", "😎", "🤓", "🧐", "🥳", "🤩", "🤪", "🥺", "😤", "😴",
+  "🐶", "🐱", "🐭", "🐰", "🦊", "🐻", "🐼", "🐨", "🐯", "🦁",
+  "🐷", "🐸", "🐵", "🐧", "🐤", "🦉", "🦄", "🐉", "🐳", "🦋",
+  "📚", "📖", "✏️", "🎨", "🎭", "🎵", "🚀", "🏰", "👑", "🧸",
+  "⭐", "🌟", "✨", "🌈", "🌙", "☀️", "🌸", "🍀", "🔥", "💎",
 ];
 
+/** 치수쌤 파스텔 팔레트 + 보조 색 */
+const COLOR_PRESETS = ["#BFD9F2", "#C8EDD9", "#FFF3B0", "#FFD6E0", "#E2D4F5", "#FFD8B5", "#A8D8EA", "#D9D9D9"];
+
+type TextField = "charName" | "charLikes" | "charDislikes" | "charLook" | "charPhrase";
+
 export default function BookCardActivity() {
-  const { lang, bookCard, setBookCard, selectedBook, customTitle, setCustomTitle } = useAppStore();
-  const fileRef = useRef<HTMLInputElement>(null);
+  const { lang, bookCard, setBookCard } = useAppStore();
   const [emojiOpen, setEmojiOpen] = useState(false);
   const [customEmoji, setCustomEmoji] = useState("");
 
-  const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => setBookCard({ uploadedImageUrl: reader.result as string });
-    reader.readAsDataURL(file);
-    if (fileRef.current) fileRef.current.value = "";
-  };
+  const imageSource = bookCard.imageSource;
+
+  const field = (key: TextField, phKey: string, opts: { emoji: string; maxLength?: number }) => (
+    <div>
+      <label htmlFor={`bc-${key}`} className="field-label">
+        <span aria-hidden="true">{opts.emoji}</span>
+        {t(key, lang)}
+      </label>
+      <input
+        id={`bc-${key}`}
+        className="input-cute w-full"
+        value={bookCard[key]}
+        maxLength={opts.maxLength ?? 60}
+        placeholder={t(phKey, lang)}
+        onChange={(e) => setBookCard({ [key]: e.target.value })}
+      />
+    </div>
+  );
 
   const handleCustomEmojiSubmit = () => {
-    if (customEmoji.trim()) {
-      setBookCard({ charEmoji: customEmoji.trim() });
-      setCustomEmoji("");
-      setEmojiOpen(false);
-    }
+    if (!customEmoji.trim()) return;
+    setBookCard({ charEmoji: customEmoji.trim() });
+    setCustomEmoji("");
+    setEmojiOpen(false);
   };
 
+  const isPreset = COLOR_PRESETS.includes(bookCard.charColor.toUpperCase());
+
   return (
-    <div className="space-y-4">
-      <h2 className="section-title">{t("bookCardTitle", lang)}</h2>
-      {selectedBook && (
-        <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
-          <span className="shrink-0">📖</span>
-          <input
-            className="bg-transparent border-b border-dashed border-muted-foreground/40 focus:border-primary focus:outline-none flex-1 min-w-0 text-sm text-muted-foreground px-0.5"
-            value={customTitle}
-            onChange={(e) => setCustomTitle(e.target.value)}
-            title="책 제목을 직접 수정할 수 있어요"
-          />
-          <span className="shrink-0 text-xs">— {selectedBook.authors?.join(", ")}</span>
-        </div>
-      )}
+    <div className="space-y-5">
+      <BookContextBar
+        idPrefix="bc"
+        showCover={bookCard.showBookCover}
+        onShowCoverChange={(v) => setBookCard({ showBookCover: v })}
+      />
 
-      {/* 책 표지 포함 여부 */}
-      {selectedBook?.imageLinks?.thumbnail && (
-        <label className="flex items-center gap-2.5 cursor-pointer select-none">
-          <div
-            onClick={() => setBookCard({ showBookCover: !bookCard.showBookCover })}
-            className={`w-10 h-6 rounded-full transition-colors relative flex-shrink-0 ${
-              bookCard.showBookCover ? "bg-primary" : "bg-secondary border border-border"
-            }`}
-          >
-            <span
-              className={`absolute top-0.5 w-5 h-5 rounded-full bg-white shadow-sm transition-transform ${
-                bookCard.showBookCover ? "translate-x-4" : "translate-x-0.5"
-              }`}
-            />
-          </div>
-          <span className="text-xs font-bold text-muted-foreground">
-            {lang === "ko" ? "책 표지 이미지 포함" : lang === "ja" ? "表紙画像を含む" : lang === "zh" ? "包含书封面" : "Show book cover"}
+      <div className="grid gap-4">
+        {field("charName", "charNamePh", { emoji: "🏷️", maxLength: 30 })}
+        <div className="grid grid-cols-1 min-[420px]:grid-cols-2 gap-4">
+          {field("charLikes", "charLikesPh", { emoji: "👍" })}
+          {field("charDislikes", "charDislikesPh", { emoji: "👎" })}
+        </div>
+        {field("charLook", "charLookPh", { emoji: "👀" })}
+        {field("charPhrase", "charPhrasePh", { emoji: "💬", maxLength: 80 })}
+
+        {/* 색깔 */}
+        <div>
+          <span className="field-label">
+            <span aria-hidden="true">🎨</span>
+            {t("charColor", lang)}
           </span>
-          {bookCard.showBookCover && (
-            <img
-              src={selectedBook.imageLinks.thumbnail}
-              alt="cover"
-              className="w-8 h-11 object-cover rounded shadow-sm ml-auto"
-            />
-          )}
-        </label>
-      )}
-
-      <div className="grid gap-3">
-        <div>
-          <label className="text-xs font-bold text-muted-foreground">{t("charName", lang)}</label>
-          <input
-            className="input-cute w-full mt-1"
-            value={bookCard.charName}
-            onChange={(e) => setBookCard({ charName: e.target.value })}
-          />
-        </div>
-        <div className="grid grid-cols-2 gap-3">
-          <div>
-            <label className="text-xs font-bold text-muted-foreground">{t("charLikes", lang)}</label>
-            <input
-              className="input-cute w-full mt-1"
-              value={bookCard.charLikes}
-              onChange={(e) => setBookCard({ charLikes: e.target.value })}
-            />
-          </div>
-          <div>
-            <label className="text-xs font-bold text-muted-foreground">{t("charDislikes", lang)}</label>
-            <input
-              className="input-cute w-full mt-1"
-              value={bookCard.charDislikes}
-              onChange={(e) => setBookCard({ charDislikes: e.target.value })}
-            />
-          </div>
-        </div>
-        <div>
-          <label className="text-xs font-bold text-muted-foreground">{t("charLook", lang)}</label>
-          <input
-            className="input-cute w-full mt-1"
-            value={bookCard.charLook}
-            onChange={(e) => setBookCard({ charLook: e.target.value })}
-          />
-        </div>
-        <div>
-          <label className="text-xs font-bold text-muted-foreground">{t("charPhrase", lang)}</label>
-          <input
-            className="input-cute w-full mt-1"
-            value={bookCard.charPhrase}
-            onChange={(e) => setBookCard({ charPhrase: e.target.value })}
-            placeholder='"..."'
-          />
-        </div>
-        <div className="grid grid-cols-2 gap-3">
-          <div>
-            <label className="text-xs font-bold text-muted-foreground">{t("charColor", lang)}</label>
-            <input
-              type="color"
-              className="w-full h-10 rounded-xl border-2 border-primary/30 cursor-pointer mt-1"
-              value={bookCard.charColor}
-              onChange={(e) => setBookCard({ charColor: e.target.value })}
-            />
-          </div>
-          <div>
-            <label className="text-xs font-bold text-muted-foreground">{t("charEmoji", lang)}</label>
-            <Popover open={emojiOpen} onOpenChange={setEmojiOpen}>
-              <PopoverTrigger asChild>
-                <button className="input-cute w-full mt-1 h-10 flex items-center justify-center text-2xl hover:bg-secondary transition-colors">
-                  {bookCard.charEmoji || <span className="text-sm text-muted-foreground">선택</span>}
+          <div className="flex flex-wrap items-center gap-2" role="radiogroup" aria-label={t("charColor", lang)}>
+            {COLOR_PRESETS.map((c) => {
+              const active = bookCard.charColor.toUpperCase() === c;
+              return (
+                <button
+                  key={c}
+                  type="button"
+                  role="radio"
+                  aria-checked={active}
+                  aria-label={c}
+                  onClick={() => setBookCard({ charColor: c })}
+                  className={`w-9 h-9 rounded-full border-2 flex items-center justify-center transition-transform ${
+                    active ? "border-foreground scale-110" : "border-black/10 hover:scale-105"
+                  }`}
+                  style={{ backgroundColor: c }}
+                >
+                  {active && <Icon name="check" size={18} className="text-foreground/80" />}
                 </button>
-              </PopoverTrigger>
-              <PopoverContent className="w-72 p-3" align="end">
-                <p className="text-xs font-bold text-muted-foreground mb-2">{t("emojiPickerTitle", lang)}</p>
-                <div className="grid grid-cols-7 gap-1 max-h-48 overflow-y-auto custom-scrollbar mb-3">
-                  {EMOJI_LIST.map((emoji) => (
-                    <button
-                      key={emoji}
-                      onClick={() => { setBookCard({ charEmoji: emoji }); setEmojiOpen(false); }}
-                      className="text-xl hover:bg-secondary rounded p-1 transition-colors"
-                    >
-                      {emoji}
-                    </button>
-                  ))}
-                </div>
-                <div className="border-t border-border pt-2">
-                  <p className="text-xs text-muted-foreground mb-1.5">{t("emojiCustom", lang)}</p>
-                  <div className="flex gap-2">
-                    <input
-                      className="input-cute flex-1 text-center text-lg h-9"
-                      value={customEmoji}
-                      onChange={(e) => setCustomEmoji(e.target.value)}
-                      placeholder="✍️"
-                      maxLength={4}
-                    />
-                    <button
-                      onClick={handleCustomEmojiSubmit}
-                      className="btn-cute px-3 h-9 text-xs"
-                    >
-                      확인
-                    </button>
-                  </div>
-                </div>
-                {bookCard.charEmoji && (
-                  <button
-                    onClick={() => { setBookCard({ charEmoji: "" }); setEmojiOpen(false); }}
-                    className="w-full mt-2 text-xs text-muted-foreground hover:text-destructive transition-colors"
-                  >
-                    ✕ 이모지 제거
-                  </button>
-                )}
-              </PopoverContent>
-            </Popover>
+              );
+            })}
+            <label
+              className={`relative h-9 pl-1 pr-3 rounded-full border-2 flex items-center gap-1.5 text-sm font-bold cursor-pointer focus-within:ring-2 focus-within:ring-ring ${
+                !isPreset ? "border-foreground" : "border-border"
+              }`}
+            >
+              <span className="w-6 h-6 rounded-full border border-black/10" style={{ backgroundColor: bookCard.charColor }} />
+              {t("customColor", lang)}
+              <input
+                type="color"
+                value={bookCard.charColor}
+                onChange={(e) => setBookCard({ charColor: e.target.value })}
+                className="absolute inset-0 opacity-0 cursor-pointer"
+                aria-label={t("customColor", lang)}
+              />
+            </label>
           </div>
+        </div>
+
+        {/* 이모지 */}
+        <div>
+          <span className="field-label">
+            <span aria-hidden="true">😊</span>
+            {t("charEmoji", lang)}
+            <span className="font-normal text-muted-foreground">({t("optional", lang)})</span>
+          </span>
+          <Popover open={emojiOpen} onOpenChange={setEmojiOpen}>
+            <PopoverTrigger asChild>
+              <button
+                type="button"
+                className="input-cute w-full flex items-center justify-between text-left"
+                aria-label={t("emojiPickerTitle", lang)}
+              >
+                {bookCard.charEmoji ? (
+                  <span className="text-2xl leading-none">{bookCard.charEmoji}</span>
+                ) : (
+                  <span className="text-muted-foreground/80">{t("emojiPickerTitle", lang)}</span>
+                )}
+                <Icon name="expand_more" size={20} className="text-muted-foreground" />
+              </button>
+            </PopoverTrigger>
+            <PopoverContent className="w-[19rem] p-3 rounded-2xl" align="start">
+              <p className="text-xs font-bold text-muted-foreground mb-2">{t("emojiPickerTitle", lang)}</p>
+              <div className="grid grid-cols-8 gap-0.5 max-h-52 overflow-y-auto mb-3">
+                {EMOJI_LIST.map((emoji) => (
+                  <button
+                    key={emoji}
+                    type="button"
+                    onClick={() => {
+                      setBookCard({ charEmoji: emoji });
+                      setEmojiOpen(false);
+                    }}
+                    className={`text-2xl rounded-lg p-1 transition-colors hover:bg-secondary ${
+                      bookCard.charEmoji === emoji ? "bg-primary/25" : ""
+                    }`}
+                  >
+                    {emoji}
+                  </button>
+                ))}
+              </div>
+              <div className="border-t border-border pt-2">
+                <p className="text-xs text-muted-foreground mb-1.5">{t("emojiCustom", lang)}</p>
+                <div className="flex gap-2">
+                  <input
+                    className="input-cute flex-1 min-w-0 text-center text-lg h-10"
+                    value={customEmoji}
+                    onChange={(e) => setCustomEmoji(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && handleCustomEmojiSubmit()}
+                    placeholder="✍️"
+                    maxLength={8}
+                  />
+                  <button type="button" onClick={handleCustomEmojiSubmit} className="btn-cute h-10 px-4 text-sm">
+                    {t("confirm", lang)}
+                  </button>
+                </div>
+              </div>
+              {bookCard.charEmoji && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setBookCard({ charEmoji: "" });
+                    setEmojiOpen(false);
+                  }}
+                  className="w-full mt-2 btn-ghost-cute hover:text-destructive"
+                >
+                  <Icon name="close" size={16} />
+                  {t("removeEmoji", lang)}
+                </button>
+              )}
+            </PopoverContent>
+          </Popover>
         </div>
       </div>
 
-      {/* Upload or Draw */}
+      {/* 캐릭터 그림: 업로드 / 직접 그리기 */}
       <div className="space-y-3">
-        <input ref={fileRef} type="file" accept="image/*" onChange={handleUpload} className="hidden" />
-
-        {bookCard.uploadedImageUrl ? (
-          <div className="space-y-2 border-2 border-primary/20 rounded-xl p-3 bg-card/50">
-            <img
-              src={bookCard.uploadedImageUrl}
-              alt="uploaded"
-              className="w-full max-h-48 object-contain rounded-lg"
-            />
-            <div className="flex gap-2">
-              <button onClick={() => fileRef.current?.click()} className="btn-outline-cute flex-1 py-1.5 text-xs">
-                📷 변경
-              </button>
-              <button onClick={() => setBookCard({ uploadedImageUrl: null })} className="btn-outline-cute border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground py-1.5 px-3">
-                ❌
-              </button>
-            </div>
-          </div>
-        ) : (
-          <button onClick={() => fileRef.current?.click()} className="btn-outline-cute w-full">
-            📷 {t("uploadDrawing", lang)}
+        <span className="field-label">
+          <span aria-hidden="true">🖼️</span>
+          {t("charImage", lang)}
+        </span>
+        <div className="segmented grid-cols-2">
+          <button type="button" aria-pressed={imageSource === "upload"} onClick={() => setBookCard({ imageSource: "upload" })}>
+            <Icon name="image" size={18} />
+            {t("uploadPhoto", lang)}
           </button>
+          <button type="button" aria-pressed={imageSource === "draw"} onClick={() => setBookCard({ imageSource: "draw" })}>
+            <Icon name="brush" size={18} />
+            {t("drawPicture", lang)}
+          </button>
+        </div>
+        {imageSource === "upload" ? (
+          <ImageAttach
+            value={bookCard.uploadedImageUrl}
+            onChange={(url) => setBookCard({ uploadedImageUrl: url })}
+            label={t("uploadDrawing", lang)}
+            hint={t("uploadDrawingHint", lang)}
+          />
+        ) : (
+          <DrawingCanvas />
         )}
-
-        <DrawingCanvas />
       </div>
     </div>
   );
