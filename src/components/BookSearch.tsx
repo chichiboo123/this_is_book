@@ -55,6 +55,9 @@ export default function BookSearch() {
       console.error("Search error:", err);
       setSearchError(true);
       setResults([]);
+      // 검색이 막혀도 활동을 이어 갈 수 있도록 직접 입력 칸을 열고 검색어를 제목으로 채움
+      setManualOpen(true);
+      setManualTitle((prev) => prev || q);
     } finally {
       setLoading(false);
     }
@@ -370,10 +373,14 @@ export default function BookSearch() {
           )}
 
           {!loading && searchError && (
-            <p className="flex items-center gap-2 text-destructive text-sm p-3 bg-destructive/10 rounded-2xl" role="alert">
-              <Icon name="error_outline" size={18} />
-              {t("searchFailed", lang)}
-            </p>
+            <div className="flex gap-2 text-sm p-3 bg-destructive/10 rounded-2xl" role="alert">
+              <Icon name="error_outline" size={18} className="text-destructive mt-0.5" />
+              <p>
+                <span className="font-bold text-destructive">{t("searchFailed", lang)}</span>
+                <br />
+                <span className="text-foreground/80">{t("searchFailedHint", lang)}</span>
+              </p>
+            </div>
           )}
 
           {searched && !loading && !searchError && results.length === 0 && (
@@ -398,13 +405,13 @@ export default function BookSearch() {
             )}
           </div>
           {manualOpen && (
-            <form onSubmit={handleManualSubmit} className="grid gap-2 sm:grid-cols-[1fr_1fr_auto] p-3 rounded-2xl bg-secondary/40">
+            <form onSubmit={handleManualSubmit} className="grid grid-cols-1 gap-2 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] p-3 rounded-2xl bg-secondary/40">
               <input
                 value={manualTitle}
                 onChange={(e) => setManualTitle(e.target.value)}
                 placeholder={t("manualTitle", lang)}
                 aria-label={t("manualTitle", lang)}
-                className="input-cute"
+                className="input-cute w-full min-w-0"
                 required
               />
               <input
@@ -412,7 +419,7 @@ export default function BookSearch() {
                 onChange={(e) => setManualAuthor(e.target.value)}
                 placeholder={`${t("manualAuthor", lang)} (${t("optional", lang)})`}
                 aria-label={t("manualAuthor", lang)}
-                className="input-cute"
+                className="input-cute w-full min-w-0"
               />
               <button type="submit" className="btn-cute" disabled={!manualTitle.trim()}>
                 <Icon name="check" size={18} />

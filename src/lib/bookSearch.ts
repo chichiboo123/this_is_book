@@ -60,6 +60,10 @@ export function mapKakaoDoc(doc: KakaoBookDoc): BookInfo {
 
 async function searchKakao(query: string): Promise<BookInfo[]> {
   const res = await fetch(`${KAKAO_URL}?query=${encodeURIComponent(query)}&size=50`);
+  if (res.status === 503) {
+    // 관리자용 안내: Netlify 환경변수 미설정 (설정 후 재배포 필요)
+    throw new Error("kakao 503 — KAKAO_REST_API_KEY 환경변수가 설정되지 않았습니다. Netlify에 등록 후 재배포하세요.");
+  }
   if (!res.ok) throw new Error(`kakao ${res.status}`);
   const data = await res.json();
   if (!Array.isArray(data?.documents)) throw new Error("kakao invalid response");
