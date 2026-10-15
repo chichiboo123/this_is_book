@@ -11,28 +11,34 @@
 
 | 기능 | 설명 |
 |------|------|
-| 📖 책 검색 | 네이버 책 검색 API를 통해 제목·저자로 검색 (최대 100건) |
-| 📷 이미지 검색 | 책 표지 사진 촬영 또는 이미지 업로드 → OCR로 제목 자동 인식 |
-| 🃏 책 카드 | 등장인물 분석 카드 — 이름, 좋아하는 것/싫어하는 것, 특징, 명대사, 색깔, 이모지, 그림/사진 |
-| 📝 소개 카드 | 책 소개 문구 + 이미지 첨부 |
-| ❓ 질문 카드 | 책을 읽고 떠오르는 질문과 답변 |
-| 🖼️ 내보내기 | 카드별 PNG 이미지 저장 또는 클립보드 복사 |
-| 💾 데이터 저장/복원 | JSON 파일로 작업 내용 저장 및 불러오기 |
-| 🌏 다국어 지원 | 한국어 · English · 日本語 · 中文 |
-| 🎨 테마 | 파스텔 블루 / 그린 / 옐로우 / 핑크 |
+| 🧭 3단계 흐름 | ① 책 고르기 → ② 카드 만들기 → ③ 저장·공유하기, 단계·카드별 완성 표시 |
+| 📖 책 검색 | 카카오 책 검색(키 미설정·오류 시 Google Books 자동 대체)으로 제목·저자 검색, 찾는 책이 없으면 직접 입력 |
+| 📷 표지 사진 검색 | 표지 촬영 또는 사진 업로드 → OCR로 제목 인식 후 검색 |
+| 🎭 책 카드 | 책을 캐릭터로 상상 — 이름, 좋아하는 것/싫어하는 것, 특징, 자주 하는 말, 색깔, 이모지, 사진 또는 직접 그린 그림 |
+| 📣 소개 카드 | 추천 지수(별점), 글머리 아이디어, 추천 글 + 이미지 |
+| ❓ 질문 카드 | 질문 아이디어, 질문·답 추가/삭제 (최대 8개) |
+| 🎨 그림판 | 펜·지우개, 되돌리기, 색 10종, 굵기 조절, 필압 지원, 자동 복원 |
+| 🖼️ 저장·공유 | 카드별 PNG 저장 · 클립보드 복사 · (모바일) 공유, 여러 장 한 번에 저장 |
+| 📱 모바일 | 작성하기/미리보기 전환, 터치 친화적 버튼 |
+| 💾 이어 하기 | 기기에 자동 저장 + 작업 파일(JSON) 저장/불러오기 |
+| 🌏 다국어 | 한국어 · English · 日本語 · 中文 |
+| 🎨 테마 | 하늘 · 새싹 · 햇살 · 꽃잎 (파스텔 4종) |
+
+> UI/UX 진단 및 개선 내역은 [docs/UI-UX-개선-보고서.md](docs/UI-UX-개선-보고서.md)를 참고하세요.
 
 ---
 
 ## 🛠️ 기술 스택
 
 - **Frontend** : React 18 + TypeScript + Vite
-- **UI** : Tailwind CSS + shadcn/ui
+- **UI** : Tailwind CSS + shadcn/ui(Radix) · Pretendard · Google Material Icons
 - **상태 관리** : Zustand (localStorage 영속화)
 - **라우팅** : React Router v6
 - **이미지 내보내기** : html-to-image
 - **OCR** : Tesseract.js
 - **배포** : Netlify (서버리스 함수로 API 프록시)
-- **책 검색 데이터** : NAVER Search API
+- **책 검색 데이터** : Kakao 책 검색(Daum 검색 API) · Google Books API
+  - 네이버 책 검색 API는 2026-07-31 서비스 종료로 교체되었습니다.
 
 ---
 
@@ -42,7 +48,7 @@
 
 - Node.js 18 이상
 - npm 또는 yarn
-- NAVER 개발자 센터에서 발급받은 책 검색 API 키
+- [카카오 디벨로퍼스](https://developers.kakao.com)에서 발급받은 REST API 키 (없어도 Google Books로 검색 가능)
 
 ### 설치 및 실행
 
@@ -56,7 +62,7 @@ npm install
 
 # 3. 환경변수 파일 생성
 cp .env.example .env
-# .env 파일에 NAVER API 키 입력 (아래 환경변수 항목 참고)
+# .env 파일에 카카오 REST API 키 입력 (아래 환경변수 항목 참고)
 
 # 4. 개발 서버 실행
 npm run dev
@@ -68,13 +74,16 @@ npm run dev
 **API 키는 절대 공개 저장소에 커밋하지 마세요.**
 
 ```
-NAVER_CLIENT_ID=여기에_클라이언트_ID_입력
-NAVER_CLIENT_SECRET=여기에_클라이언트_시크릿_입력
+KAKAO_REST_API_KEY=여기에_카카오_REST_API_키_입력
+# (선택) VITE_GOOGLE_BOOKS_API_KEY=
 ```
 
-> Vite 개발 서버는 `/api/naver/*` 경로를 NAVER API로 프록시합니다.
-> 프로덕션(Netlify)에서는 `netlify/functions/naver-search.ts` 서버리스 함수가 동일 역할을 수행합니다.
-> Netlify 배포 시 대시보드 → Site settings → Environment variables에서 위 두 값을 등록하세요.
+> - 카카오 키 발급: 카카오 디벨로퍼스 → 내 애플리케이션 → 앱 추가 → **앱 키 > REST API 키**
+> - Vite 개발 서버는 `/api/kakao-book-search`를 카카오 책 검색으로 프록시합니다.
+> - 프로덕션(Netlify)에서는 `netlify/functions/kakao-book-search.ts` 서버리스 함수가 키를 붙여 중계합니다.
+>   **Netlify 대시보드 → Site configuration → Environment variables**에 `KAKAO_REST_API_KEY`를 등록한 뒤 다시 배포하세요.
+> - 카카오 키가 없거나 호출에 실패하면 브라우저에서 Google Books를 바로 검색합니다(키 불필요).
+> - 더 이상 쓰지 않는 `NAVER_CLIENT_ID`, `NAVER_CLIENT_SECRET` 환경변수는 삭제해도 됩니다.
 
 ### 빌드
 
@@ -89,25 +98,34 @@ npm run preview # 빌드 결과 로컬 미리보기
 
 ```
 src/
-├── components/          # UI 컴포넌트
-│   ├── BookSearch.tsx   # 책 검색 (OCR 포함)
-│   ├── BookCardActivity.tsx   # 책 카드 작성
-│   ├── IntroCardActivity.tsx  # 소개 카드 작성
-│   ├── QuestionCardActivity.tsx # 질문 카드 작성
-│   ├── *Preview.tsx     # 카드 미리보기
-│   ├── ExportToolbar.tsx # 내보내기
-│   ├── ThemeSelector.tsx # 테마 + 데이터 저장/복원
-│   └── ResetButton.tsx  # 전체 초기화
+├── components/
+│   ├── AppHeader.tsx          # 헤더 (테마·언어·사용법·더보기 메뉴)
+│   ├── AppFooter.tsx          # 치수쌤 표준 푸터 + 데이터 출처
+│   ├── BookSearch.tsx         # ① 책 고르기 (검색·OCR·직접 입력·선택한 책 요약)
+│   ├── CardWorkspace.tsx      # ② 카드 작성 + 미리보기 레이아웃 (모바일 전환)
+│   ├── BookContextBar.tsx     # 카드별 책 제목 수정·표지 넣기
+│   ├── *CardActivity.tsx      # 책/소개/질문 카드 작성
+│   ├── *CardPreview.tsx       # 카드 디자인 (미리보기 = 저장 이미지)
+│   ├── CardShell.tsx          # 카드 공통 틀 (브랜드 표기)
+│   ├── DrawingCanvas.tsx      # 그림판
+│   ├── CardExportActions.tsx  # 카드별 저장·복사·공유
+│   ├── ExportToolbar.tsx      # ③ 여러 장 저장
+│   ├── ExportStage.tsx        # 내보내기용 숨김 렌더링
+│   └── HelpModal.tsx, ConfirmDialog.tsx, ImageAttach.tsx, StarRating.tsx, Icon.tsx
+├── hooks/useCardExport.ts     # 저장·복사·공유 + 오류 안내
 ├── lib/
-│   ├── useAppStore.ts   # Zustand 전역 상태
-│   ├── naverBooks.ts    # NAVER API 호출 로직
-│   └── i18n.ts          # 다국어 번역
-└── pages/
-    └── Index.tsx        # 메인 페이지
+│   ├── useAppStore.ts         # Zustand 전역 상태 (자동 저장)
+│   ├── exportCard.ts          # html-to-image 캡처·파일명·클립보드·공유
+│   ├── backup.ts              # 작업 파일 저장/불러오기
+│   ├── image.ts               # 업로드 이미지 축소, 대비 글자색
+│   ├── progress.ts            # 카드 완성 판정
+│   ├── bookSearch.ts          # 책 검색 (카카오 → Google Books 대체)
+│   └── i18n.ts                # 다국어 번역
+└── pages/Index.tsx            # 메인 페이지
 
-netlify/
-└── functions/
-    └── naver-search.ts  # 서버리스 API 프록시
+netlify/functions/
+├── kakao-book-search.ts       # 카카오 책 검색 API 프록시 (키 보호)
+└── image-proxy.ts             # 표지 이미지 CORS 프록시
 ```
 
 ---
