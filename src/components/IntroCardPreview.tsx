@@ -35,7 +35,16 @@ export default function IntroCardPreview() {
         )}
 
         <div className="relative rounded-2xl bg-primary/10 px-5 pt-6 pb-4">
-          <span className="absolute -top-1 left-3 text-5xl leading-none font-title text-primary-strong/40" aria-hidden="true">“</span>
+          {/* 제목 글꼴(Black Han Sans)의 “는 각진 블록 모양이라 SVG로 여는 따옴표(66 모양)를 그림 */}
+          <svg
+            viewBox="0 0 30 22"
+            className="absolute -top-2.5 left-4 w-8 h-6 text-primary-strong/40"
+            fill="currentColor"
+            aria-hidden="true"
+          >
+            <path d="M1 16C1 8 5 3 12 1l.6 2.4C8.5 5 6.6 7.5 6.3 10.04A6 6 0 1 1 1 16Z" />
+            <path d="M18 16c0-8 4-13 11-15l.6 2.4c-4.1 1.6-6 4.1-6.3 6.64A6 6 0 1 1 18 16Z" />
+          </svg>
           <p className={`text-[15px] whitespace-pre-wrap leading-relaxed break-keep ${introText ? "" : "text-[#9aa0aa]"}`}>
             {introText || t("introPlaceholder", lang)}
           </p>

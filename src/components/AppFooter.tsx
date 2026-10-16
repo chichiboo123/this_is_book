@@ -1,8 +1,9 @@
+import { Link } from "react-router-dom";
 import { useAppStore } from "@/lib/useAppStore";
 import { t } from "@/lib/i18n";
 import Icon from "@/components/Icon";
 
-/** 치수쌤 웹앱 표준 푸터 + 데이터 출처 */
+/** 치수쌤 웹앱 표준 푸터 + 데이터 출처 + 이용약관·개인정보 처리방침 */
 export default function AppFooter() {
   const lang = useAppStore((s) => s.lang);
   return (
@@ -36,6 +37,16 @@ export default function AppFooter() {
           Google Books
         </a>
       </p>
+      {/* 개인정보 처리방침은 다른 고지와 구분되도록 굵게·강조색으로 표시 (개인정보 처리방침 작성지침) */}
+      <nav aria-label={`${t("terms", lang)} · ${t("privacy", lang)}`} className="text-xs text-[#767676]">
+        <Link to="/terms" className="hover:text-[#006DD2] hover:underline underline-offset-2 transition-colors">
+          {t("terms", lang)}
+        </Link>
+        <span className="mx-2 text-[#B2B2B2]" aria-hidden="true">|</span>
+        <Link to="/privacy" className="font-bold text-[#006DD2] hover:underline underline-offset-2">
+          {t("privacy", lang)}
+        </Link>
+      </nav>
     </footer>
   );
 }

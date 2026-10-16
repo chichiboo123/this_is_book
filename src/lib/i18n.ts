@@ -258,6 +258,14 @@ const translations: Record<string, Entry> = {
   needHelp: { ko: "도움이 필요하면 물어보세요!", en: "Need help? Just ask!", ja: "困ったら聞いてね！", zh: "需要帮助请联系！" },
   footer: { ko: "Created by. 교육뮤지컬 꿈꾸는 치수쌤", en: "Created by. 교육뮤지컬 꿈꾸는 치수쌤", ja: "Created by. 교육뮤지컬 꿈꾸는 치수쌤", zh: "Created by. 교육뮤지컬 꿈꾸는 치수쌤" },
   dataSource: { ko: "책 검색 데이터 제공", en: "Book data by", ja: "書籍データ提供", zh: "图书数据来源" },
+  terms: { ko: "이용약관", en: "Terms of Service", ja: "利用規約", zh: "使用条款" },
+  privacy: { ko: "개인정보 처리방침", en: "Privacy Policy", ja: "プライバシーポリシー", zh: "隐私政策" },
+  legalKoreanOnly: {
+    ko: "",
+    en: "This document is provided in Korean under the laws of the Republic of Korea.",
+    ja: "この文書は大韓民国の法令に基づき韓国語で提供されます。",
+    zh: "本文件依据大韩民国法律以韩语提供。",
+  },
   notFoundTitle: { ko: "페이지를 찾을 수 없어요", en: "Page not found", ja: "ページが見つかりません", zh: "找不到页面" },
   goHome: { ko: "처음으로 돌아가기", en: "Back to home", ja: "ホームへ戻る", zh: "返回首页" },
 };
