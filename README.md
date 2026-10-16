@@ -100,7 +100,8 @@ npm run preview # 빌드 결과 로컬 미리보기
 src/
 ├── components/
 │   ├── AppHeader.tsx          # 헤더 (테마·언어·사용법·더보기 메뉴)
-│   ├── AppFooter.tsx          # 치수쌤 표준 푸터 + 데이터 출처
+│   ├── AppFooter.tsx          # 치수쌤 표준 푸터 + 데이터 출처 + 이용약관·개인정보 처리방침 링크
+│   ├── LegalLayout.tsx        # 이용약관·개인정보 처리방침 공통 틀 (목차·시행일)
 │   ├── BookSearch.tsx         # ① 책 고르기 (검색·OCR·직접 입력·선택한 책 요약)
 │   ├── CardWorkspace.tsx      # ② 카드 작성 + 미리보기 레이아웃 (모바일 전환)
 │   ├── BookContextBar.tsx     # 카드별 책 제목 수정·표지 넣기
@@ -120,8 +121,12 @@ src/
 │   ├── image.ts               # 업로드 이미지 축소, 대비 글자색
 │   ├── progress.ts            # 카드 완성 판정
 │   ├── bookSearch.ts          # 책 검색 (카카오 → Google Books 대체)
+│   ├── legal.ts               # 약관·방침 시행일, 운영자·문의처
 │   └── i18n.ts                # 다국어 번역
-└── pages/Index.tsx            # 메인 페이지
+└── pages/
+    ├── Index.tsx              # 메인 페이지
+    ├── Terms.tsx              # 이용약관 (/terms)
+    └── Privacy.tsx            # 개인정보 처리방침 (/privacy)
 
 netlify/functions/
 ├── kakao-book-search.ts       # 카카오 책 검색 API 프록시 (키 보호)

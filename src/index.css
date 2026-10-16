@@ -189,6 +189,40 @@
     @apply hover:border-primary hover:bg-primary/10 transition-colors;
   }
 
+  /* 이용약관 · 개인정보 처리방침 본문 */
+  .legal-doc {
+    @apply text-[15px] leading-relaxed text-foreground/90;
+  }
+  .legal-doc h2 {
+    font-family: var(--font-body);
+    @apply text-lg font-bold leading-snug text-foreground;
+  }
+  .legal-doc ul {
+    @apply list-disc pl-5 space-y-1;
+  }
+  .legal-doc ol {
+    @apply list-decimal pl-5 space-y-1;
+  }
+  .legal-doc a {
+    @apply text-[#006DD2] underline underline-offset-2 hover:brightness-90;
+  }
+  .legal-table {
+    @apply overflow-x-auto rounded-xl border border-border;
+  }
+  .legal-table table {
+    @apply w-full min-w-[34rem] text-sm border-collapse;
+  }
+  .legal-table th,
+  .legal-table td {
+    @apply border-b border-border px-3 py-2 text-left align-top;
+  }
+  .legal-table th {
+    @apply bg-secondary font-bold whitespace-nowrap;
+  }
+  .legal-table tr:last-child td {
+    @apply border-b-0;
+  }
+
   /* 세그먼트 컨트롤 (모바일 작성/미리보기, 사진/그림 전환) */
   .segmented {
     @apply grid gap-1 p-1 rounded-full bg-secondary;
